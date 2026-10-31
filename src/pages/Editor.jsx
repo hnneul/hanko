@@ -4,6 +4,7 @@ import { finishedSize, resizeCells, resizeLosesPaint, removeColor } from '../lib
 import Preview from '../components/Preview.jsx'
 
 const BEGINNER_COLORS = 3
+const RESET_PROGRESS = { doneRows: [], status: 'design' }
 
 export default function Editor({ pattern, onChange, onBack, onKnit }) {
   const { width, height, cells, palette, gauge } = pattern
@@ -12,6 +13,13 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
   const painting = useRef(null) // 드래그 중: { cells: 최신 칸, last: 직전 칸 번호 }
   const current = Math.min(color, palette.length - 1)
   const cm = finishedSize(width, height, gauge)
+  const hasProgress = pattern.doneRows.length > 0
+
+  // 뜨는 중인 도안의 무늬를 바꾸면 체크한 단이 안 맞으므로 진행 기록 초기화 (PRD #9)
+  // 배색 색값·이름, 게이지만 바꾸는 건 유지
+  function okToReset() {
+    return !hasProgress || confirm('진행 기록이 초기화돼요. 무늬를 바꿀까요?')
+  }
 
   // 칠하기 (PRD #4-2). 손가락 드래그도 되도록 포인터 위치의 칸을 직접 찾고,
   // 빠르게 움직여도 빈칸이 안 생기게 직전 칸부터 지금 칸까지 선으로 칠함
@@ -26,7 +34,7 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
       next[Math.round(y0 + ((y1 - y0) * s) / steps) * width + Math.round(x0 + ((x1 - x0) * s) / steps)] = current
     }
     painting.current = { cells: next, last: i }
-    onChange({ ...pattern, cells: next })
+    onChange({ ...pattern, ...RESET_PROGRESS, cells: next })
   }
 
   function updateColor(index, change) {
@@ -39,8 +47,10 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
   }
 
   function deleteColor(index) {
+    if (!okToReset()) return
     onChange({
       ...pattern,
+      ...RESET_PROGRESS,
       palette: palette.filter((_, i) => i !== index),
       cells: removeColor(cells, index),
     })
@@ -53,11 +63,14 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
     const h = Math.min(GRID_MAX, Math.max(GRID_MIN, Number(size.height) || height))
     setSize({ width: w, height: h })
     if (w === width && h === height) return
-    if (resizeLosesPaint(cells, width, height, w, h) && !confirm('칠한 칸 일부가 잘려요. 크기를 바꿀까요?')) {
+    const warnings = []
+    if (resizeLosesPaint(cells, width, height, w, h)) warnings.push('칠한 칸 일부가 잘려요.')
+    if (hasProgress) warnings.push('진행 기록이 초기화돼요.')
+    if (warnings.length && !confirm(`${warnings.join(' ')} 크기를 바꿀까요?`)) {
       setSize({ width, height })
       return
     }
-    onChange({ ...pattern, width: w, height: h, cells: resizeCells(cells, width, height, w, h) })
+    onChange({ ...pattern, ...RESET_PROGRESS, width: w, height: h, cells: resizeCells(cells, width, height, w, h) })
   }
 
   function updateGauge(key, value) {
@@ -78,11 +91,12 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
             className="grid"
             style={{ gridTemplateColumns: `repeat(${width}, 1fr)`, maxWidth: width * 28 }}
             onPointerDown={(e) => {
+              if (!okToReset()) return
               painting.current = {}
               e.currentTarget.setPointerCapture(e.pointerId)
               paintAt(e)
             }}
-            onPointerMove={(e) => painting.current && paintAt(e)}
+            onPointerMove={(e) => painting.current && e.buttons && paintAt(e)}
             onPointerUp={() => (painting.current = null)}
             onPointerCancel={() => (painting.current = null)}
           >

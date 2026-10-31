@@ -5,7 +5,7 @@ import Preview from '../components/Preview.jsx'
 const STATUS_NAMES = { design: '디자인 중', knitting: '뜨는 중', done: '완성' }
 
 // 내 작업실: 도안 목록, 이름 바꾸기, 삭제, 수준 설정 (PRD #4-6, #4-1)
-export default function Home({ patterns, level, onNew, onOpen, onRename, onDelete, onLevel }) {
+export default function Home({ patterns, level, onNew, onOpen, onKnit, onRename, onDelete, onLevel }) {
   const sorted = [...patterns].sort((a, b) => b.updatedAt - a.updatedAt)
 
   function rename(p) {
@@ -44,6 +44,11 @@ export default function Home({ patterns, level, onNew, onOpen, onRename, onDelet
                 </span>
               </button>
               <div className="pattern-actions">
+                {p.status === 'knitting' && (
+                  <button type="button" className="btn btn-sm btn-primary" onClick={() => onKnit(p.id)}>
+                    이어서 뜨기
+                  </button>
+                )}
                 <button type="button" className="btn btn-sm" onClick={() => rename(p)}>
                   이름 바꾸기
                 </button>

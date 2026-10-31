@@ -13,6 +13,7 @@ function App() {
   const [page, setPage] = useState('home')
   const [patterns, setPatterns] = useState(loadPatterns)
   const [openId, setOpenId] = useState(null)
+  const [knitFrom, setKnitFrom] = useState('home') // 따라 뜨기에서 뒤로 가면 돌아갈 화면
   const [level, setLevel] = useState(loadLevel)
   const pattern = patterns.find((p) => p.id === openId)
 
@@ -50,12 +51,21 @@ function App() {
         pattern={pattern}
         onChange={(p) => updatePattern({ ...p, updatedAt: Date.now() })}
         onBack={() => setPage('home')}
-        onKnit={() => setPage('knit')}
+        onKnit={() => {
+          setKnitFrom('editor')
+          setPage('knit')
+        }}
       />
     )
   }
-  if (page === 'knit') {
-    return <Knit onBack={() => setPage('editor')} />
+  if (page === 'knit' && pattern) {
+    return (
+      <Knit
+        pattern={pattern}
+        onChange={(p) => updatePattern({ ...p, updatedAt: Date.now() })}
+        onBack={() => setPage(knitFrom)}
+      />
+    )
   }
   return (
     <Home
@@ -65,6 +75,11 @@ function App() {
       onOpen={(id) => {
         setOpenId(id)
         setPage('editor')
+      }}
+      onKnit={(id) => {
+        setOpenId(id)
+        setKnitFrom('home')
+        setPage('knit')
       }}
       onRename={(id, name) => updatePattern({ ...patterns.find((p) => p.id === id), name, updatedAt: Date.now() })}
       onDelete={(id) => setPatterns((list) => list.filter((p) => p.id !== id))}

@@ -62,3 +62,34 @@ export function removeColor(cells, index) {
 export function progress(pattern) {
   return Math.round((pattern.doneRows.length / pattern.height) * 100)
 }
+
+// 단별 설명 (PRD #4-4, #9): 맨 아래 줄이 1단, 앞면 기준 홀수 단은 오른쪽→왼쪽·짝수 단은 왼쪽→오른쪽
+// 같은 색이 이어지면 묶음. [{ row, fromRight, runs: [{ color, name, count }] }]
+export function knitRows({ cells, width, height, palette }) {
+  const rows = []
+  for (let row = 1; row <= height; row++) {
+    const start = (height - row) * width
+    const line = cells.slice(start, start + width)
+    const fromRight = row % 2 === 1
+    if (fromRight) line.reverse()
+    const runs = []
+    for (const color of line) {
+      const last = runs.at(-1)
+      if (last?.color === color) last.count++
+      else runs.push({ color, name: palette[color].name, count: 1 })
+    }
+    rows.push({ row, fromRight, runs })
+  }
+  return rows
+}
+
+// 기초 사슬: 가로 칸 수 + 짧은뜨기 기둥코 1코 (PRD #9)
+export function startText(width) {
+  return `시작: 사슬 ${width + 1}코`
+}
+
+// 체크한 단이 바뀌면 상태도 같이: 0단 → 디자인 중, 일부 → 뜨는 중, 전부 → 완성 (PRD #4-6)
+export function withDoneRows(pattern, doneRows) {
+  const status = doneRows.length === 0 ? 'design' : doneRows.length >= pattern.height ? 'done' : 'knitting'
+  return { ...pattern, doneRows, status }
+}
