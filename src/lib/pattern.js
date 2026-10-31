@@ -57,3 +57,8 @@ export function resizeLosesPaint(cells, width, height, newWidth, newHeight) {
 export function removeColor(cells, index) {
   return cells.map((c) => (c === index ? 0 : c > index ? c - 1 : c))
 }
+
+// 진행률(%): 체크한 단 수 / 전체 단 수 (PRD #4-6)
+export function progress(pattern) {
+  return Math.round((pattern.doneRows.length / pattern.height) * 100)
+}
