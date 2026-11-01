@@ -3,6 +3,7 @@ import { GRID_MIN, GRID_MAX, MAX_COLORS, AI_MOOD_MAX } from '../config.js'
 import { finishedSize, resizeCells, resizeLosesPaint, removeColor } from '../lib/pattern.js'
 import { askAI } from '../lib/ai.js'
 import Preview from '../components/Preview.jsx'
+import { SiteHeader } from '../components/Brand.jsx'
 
 const BEGINNER_COLORS = 3
 const RESET_PROGRESS = { doneRows: [], status: 'design' }
@@ -99,39 +100,67 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
   }
 
   return (
-    <main className="page">
-      <button type="button" className="btn" onClick={onBack}>
-        뒤로 가기
-      </button>
-      <h1>{pattern.name}</h1>
+    <main className="page editor-page">
+      <SiteHeader>
+        <button type="button" className="btn btn-sm" onClick={onBack}>← 내 작업실</button>
+      </SiteHeader>
+
+      <header className="workbench-head">
+        <div>
+          <p className="eyebrow">DESIGN WORKSPACE</p>
+          <h1>{pattern.name}</h1>
+          <p className="save-state"><span aria-hidden="true" /> 브라우저에 자동 저장 중</p>
+        </div>
+        <button type="button" className="btn btn-primary btn-lg desktop-knit-button" onClick={onKnit}>
+          따라 뜨기 시작
+        </button>
+      </header>
 
       <div className="editor">
-        <section>
-          <div
-            className="grid"
-            style={{ gridTemplateColumns: `repeat(${width}, 1fr)`, maxWidth: width * 28 }}
-            onPointerDown={(e) => {
-              if (!okToReset()) return
-              painting.current = {}
-              e.currentTarget.setPointerCapture(e.pointerId)
-              paintAt(e)
-            }}
-            onPointerMove={(e) => painting.current && e.buttons && paintAt(e)}
-            onPointerUp={() => (painting.current = null)}
-            onPointerCancel={() => (painting.current = null)}
-          >
-            {cells.map((c, i) => (
-              <div key={i} data-cell={i} className="cell" style={{ background: palette[c].hex }} />
-            ))}
+        <section className="canvas-panel">
+          <div className="canvas-panel-head">
+            <div>
+              <h2>격자에 무늬 그리기</h2>
+              <p>색을 고른 뒤 칸을 누르거나 드래그해 보세요.</p>
+            </div>
+            <span className="canvas-size">{width}코 × {height}단</span>
           </div>
-          <p className="muted">
-            {width}코 × {height}단 · 맨 아래 줄이 1단이에요.
-          </p>
+          <div className="grid-stage">
+            <div
+              className="grid"
+              style={{ gridTemplateColumns: `repeat(${width}, 1fr)`, maxWidth: width * 28 }}
+              onPointerDown={(e) => {
+                if (!okToReset()) return
+                painting.current = {}
+                e.currentTarget.setPointerCapture(e.pointerId)
+                paintAt(e)
+              }}
+              onPointerMove={(e) => painting.current && e.buttons && paintAt(e)}
+              onPointerUp={() => (painting.current = null)}
+              onPointerCancel={() => (painting.current = null)}
+            >
+              {cells.map((c, i) => (
+                <div key={i} data-cell={i} className="cell" style={{ background: palette[c].hex }} />
+              ))}
+            </div>
+          </div>
+          <p className="canvas-help"><span aria-hidden="true">i</span> 맨 아래 줄이 1단이에요. 완성품은 아래에서 위로 떠 올라가요.</p>
         </section>
 
         <aside className="editor-side">
-          <div className="card">
-            <h3>배색</h3>
+          <div className="card preview-card">
+            <div className="tool-heading">
+              <h3>완성품 미리보기</h3>
+              <span>{cm.width} × {cm.height}cm</span>
+            </div>
+            <Preview pattern={pattern} />
+          </div>
+
+          <div className="card tool-card">
+            <div className="tool-heading">
+              <h3>배색</h3>
+              <span>{palette.length}/{MAX_COLORS}색</span>
+            </div>
             <ul className="swatches">
               {palette.map((c, i) => (
                 <li key={i} className={i === current ? 'swatch selected' : 'swatch'}>
@@ -174,8 +203,11 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
             {palette.length > BEGINNER_COLORS && <p className="muted">초보에게는 2~3색을 추천해요.</p>}
           </div>
 
-          <form className="card" onSubmit={recommend}>
-            <h3>AI 배색 추천</h3>
+          <form className="card tool-card ai-palette-card" onSubmit={recommend}>
+            <div className="tool-heading">
+              <h3>AI 배색 추천</h3>
+              <span className="ai-label">AI</span>
+            </div>
             <div className="ask">
               <input
                 className="text-input"
@@ -210,8 +242,8 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
             ))}
           </form>
 
-          <form className="card" onSubmit={applySize}>
-            <h3>크기</h3>
+          <form className="card tool-card" onSubmit={applySize}>
+            <div className="tool-heading"><h3>격자 크기</h3></div>
             <div className="fields">
               <label>
                 가로(코)
@@ -239,8 +271,8 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
             </button>
           </form>
 
-          <div className="card">
-            <h3>게이지와 완성 크기</h3>
+          <div className="card tool-card">
+            <div className="tool-heading"><h3>게이지와 완성 크기</h3></div>
             <div className="fields">
               <label>
                 10cm당 코
@@ -251,20 +283,16 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
                 <input type="number" min="1" defaultValue={gauge.rows} onChange={(e) => updateGauge('rows', e.target.value)} />
               </label>
             </div>
-            <p>
-              완성 크기 <strong>가로 {cm.width}cm × 세로 {cm.height}cm</strong>
+            <p className="finished-size">
+              <span>예상 완성 크기</span>
+              <strong>{cm.width} × {cm.height}cm</strong>
             </p>
           </div>
-
-          <div className="card">
-            <h3>미리보기</h3>
-            <Preview pattern={pattern} />
-          </div>
-
-          <button type="button" className="btn btn-primary btn-lg" onClick={onKnit}>
-            따라 뜨기
-          </button>
         </aside>
+      </div>
+
+      <div className="mobile-editor-action">
+        <button type="button" className="btn btn-primary btn-lg" onClick={onKnit}>따라 뜨기 시작</button>
       </div>
     </main>
   )

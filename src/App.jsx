@@ -20,6 +20,11 @@ function App() {
   // 도안이 바뀔 때마다 자동 저장 (PRD #4-6)
   useEffect(() => savePatterns(patterns), [patterns])
 
+  // 화면을 바꾸면 이전 화면의 스크롤 위치를 이어받지 않도록 맨 위에서 시작
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [page, openId])
+
   function chooseLevel(id) {
     setLevel(id)
     saveLevel(id)
@@ -65,6 +70,7 @@ function App() {
         level={level}
         onChange={(p) => updatePattern({ ...p, updatedAt: Date.now() })}
         onBack={() => setPage(knitFrom)}
+        onComplete={() => setPage('home')}
       />
     )
   }
