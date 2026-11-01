@@ -454,3 +454,84 @@ progress {
 .knit-actions .btn-lg {
   flex: 1;
 }
+
+/* AI: 배색 추천·도우미 */
+.ask {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.text-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+  font: inherit;
+}
+.error {
+  color: var(--color-error);
+  font-weight: 600;
+}
+.palette-pick {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.palette-pick:hover {
+  background: var(--color-surface-muted);
+}
+.palette-pick:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+.palette-strip {
+  display: flex;
+  height: 28px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+.palette-strip > span {
+  flex: 1;
+}
+.faq {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.chat {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 0;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+.chat li {
+  padding: 10px 12px;
+  border-radius: 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.chat-me {
+  justify-self: end;
+  max-width: 85%;
+  background: var(--color-primary-soft);
+}
+.chat-ai {
+  background: var(--color-surface-muted);
+}

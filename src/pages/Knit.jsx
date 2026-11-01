@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { knitRows, startText, withDoneRows, progress } from '../lib/pattern.js'
 import Preview from '../components/Preview.jsx'
+import Helper from '../components/Helper.jsx'
 
 const canWakeLock = typeof navigator !== 'undefined' && 'wakeLock' in navigator
 
 // 따라 뜨기: 단별 설명 + 작은 격자, 한 단씩 체크 (PRD #4-4)
-export default function Knit({ pattern, onChange, onBack }) {
+export default function Knit({ pattern, level, onChange, onBack }) {
   const rows = knitRows(pattern)
   const { doneRows, palette } = pattern
   // 다시 들어오면 첫 번째 안 끝낸 단부터
@@ -104,6 +105,7 @@ export default function Knit({ pattern, onChange, onBack }) {
               화면 켜두기: {awake ? '켜짐' : '꺼짐'}
             </button>
           )}
+          <Helper pattern={pattern} level={level} row={rows.find((r) => r.row === current)} />
         </section>
       </div>
 

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
-import { GRID_MIN, GRID_MAX, MAX_COLORS } from '../config.js'
+import { GRID_MIN, GRID_MAX, MAX_COLORS, AI_MOOD_MAX } from '../config.js'
 import { finishedSize, resizeCells, resizeLosesPaint, removeColor } from '../lib/pattern.js'
+import { askAI } from '../lib/ai.js'
 import Preview from '../components/Preview.jsx'
 
 const BEGINNER_COLORS = 3
@@ -10,6 +11,8 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
   const { width, height, cells, palette, gauge } = pattern
   const [color, setColor] = useState(1)
   const [size, setSize] = useState({ width, height })
+  const [mood, setMood] = useState('')
+  const [ai, setAi] = useState({ loading: false, error: '', palettes: [] })
   const painting = useRef(null) // 드래그 중: { cells: 최신 칸, last: 직전 칸 번호 }
   const current = Math.min(color, palette.length - 1)
   const cm = finishedSize(width, height, gauge)
@@ -71,6 +74,23 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
       return
     }
     onChange({ ...pattern, ...RESET_PROGRESS, width: w, height: h, cells: resizeCells(cells, width, height, w, h) })
+  }
+
+  // AI 배색 추천: 지금 색 수만큼 3안 (PRD #4-3)
+  async function recommend(e) {
+    e.preventDefault()
+    setAi({ loading: true, error: '', palettes: [] })
+    try {
+      const { palettes } = await askAI({ type: 'palette', mood: mood.trim(), count: palette.length })
+      setAi({ loading: false, error: '', palettes })
+    } catch (err) {
+      setAi({ loading: false, error: err.message, palettes: [] })
+    }
+  }
+
+  // 무늬(cells)는 그대로, 색만 바꿈. 배색만 바뀌니 진행 기록도 유지 (PRD #9)
+  function applyPalette(rec) {
+    onChange({ ...pattern, palette: palette.map((c, i) => ({ ...c, ...rec.colors[i] })) })
   }
 
   function updateGauge(key, value) {
@@ -152,6 +172,42 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
             )}
             {palette.length > BEGINNER_COLORS && <p className="muted">초보에게는 2~3색을 추천해요.</p>}
           </div>
+
+          <form className="card" onSubmit={recommend}>
+            <h3>AI 배색 추천</h3>
+            <div className="ask">
+              <input
+                className="text-input"
+                value={mood}
+                maxLength={AI_MOOD_MAX}
+                placeholder="예: 봄 느낌으로"
+                onChange={(e) => setMood(e.target.value)}
+                aria-label="원하는 분위기"
+              />
+              <button type="submit" className="btn btn-primary" disabled={ai.loading || !mood.trim()}>
+                {ai.loading ? '추천 중…' : '추천받기'}
+              </button>
+            </div>
+            <p className="muted">무늬는 그대로 두고 색 {palette.length}개만 바꿔요.</p>
+            {ai.error && (
+              <p className="error" role="alert">
+                {ai.error}
+              </p>
+            )}
+            {ai.palettes.map((rec, i) => (
+              <button key={i} type="button" className="palette-pick" onClick={() => applyPalette(rec)}>
+                <span className="palette-strip">
+                  {rec.colors.map((c, j) => (
+                    <span key={j} style={{ background: c.hex }} />
+                  ))}
+                </span>
+                <span>
+                  <strong>{rec.name}</strong>
+                  <span className="muted"> {rec.colors.map((c) => c.name).join(' · ')}</span>
+                </span>
+              </button>
+            ))}
+          </form>
 
           <form className="card" onSubmit={applySize}>
             <h3>크기</h3>

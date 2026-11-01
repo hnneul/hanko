@@ -62,6 +62,7 @@ function App() {
     return (
       <Knit
         pattern={pattern}
+        level={level}
         onChange={(p) => updatePattern({ ...p, updatedAt: Date.now() })}
         onBack={() => setPage(knitFrom)}
       />
