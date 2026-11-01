@@ -29,7 +29,7 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
   // 빠르게 움직여도 빈칸이 안 생기게 직전 칸부터 지금 칸까지 선으로 칠함
   function paintAt(e) {
     const i = Number(document.elementFromPoint(e.clientX, e.clientY)?.dataset.cell ?? NaN)
-    if (Number.isNaN(i)) return
+    if (Number.isNaN(i) || i === painting.current.last) return // 같은 칸 안에서 움직이면 다시 칠하지 않음
     const next = [...(painting.current.cells ?? cells)]
     const from = painting.current.last ?? i
     const [x0, y0, x1, y1] = [from % width, Math.floor(from / width), i % width, Math.floor(i / width)]
@@ -181,7 +181,9 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
                   <input
                     className="swatch-name"
                     value={c.name}
+                    maxLength={20} // AI 서버가 1~20자 이름만 받음 (lib/ai.js)
                     onChange={(e) => updateColor(i, { name: e.target.value })}
+                    onBlur={(e) => !e.target.value.trim() && updateColor(i, { name: `색 ${i + 1}` })}
                     aria-label="색 이름"
                   />
                   {i === 0 ? (

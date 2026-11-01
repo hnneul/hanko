@@ -4,8 +4,8 @@ import Preview from '../components/Preview.jsx'
 import { SiteHeader } from '../components/Brand.jsx'
 
 const GROUPS = [
-  { title: '빈 격자로 시작', desc: '바탕색만 칠해진 격자에 처음부터 내 무늬를 그려요.', blank: true },
-  { title: '무늬 템플릿', desc: '무늬가 칠해진 템플릿을 골라 색과 모양을 바꿔요.', blank: false },
+  { title: '빈 격자로 시작', desc: '바탕색만 칠해진 격자에 처음부터 내 무늬를 그려요.', items: templates.filter((t) => t.blank) },
+  { title: '무늬 템플릿', desc: '무늬가 칠해진 템플릿을 골라 색과 모양을 바꿔요.', items: templates.filter((t) => !t.blank) },
 ]
 
 export default function Templates({ onBack, onPick }) {
@@ -28,22 +28,20 @@ export default function Templates({ onBack, onPick }) {
               <h2>{g.title}</h2>
               <p>{g.desc}</p>
             </div>
-            <span className="count-pill">2가지</span>
+            <span className="count-pill">{g.items.length}가지</span>
           </div>
           <div className="template-list">
-            {templates
-              .filter((t) => !!t.blank === g.blank)
-              .map((t) => (
-                <button key={t.id} type="button" className="card template-card" onClick={() => onPick(t)}>
-                  <span className="template-preview"><Preview pattern={{ ...t, gauge: DEFAULT_GAUGE }} maxWidth={190} /></span>
-                  <span className="template-copy">
-                    <span className="template-type">{t.blank ? 'BLANK GRID' : 'PATTERN'}</span>
-                    <strong>{t.name}</strong>
-                    <span>{t.width} × {t.height}칸 · {t.palette.length}색</span>
-                  </span>
-                  <span className="template-arrow" aria-hidden="true">→</span>
-                </button>
-              ))}
+            {g.items.map((t) => (
+              <button key={t.id} type="button" className="card template-card" onClick={() => onPick(t)}>
+                <span className="template-preview"><Preview pattern={{ ...t, gauge: DEFAULT_GAUGE }} maxWidth={190} /></span>
+                <span className="template-copy">
+                  <span className="template-type">{t.blank ? 'BLANK GRID' : 'PATTERN'}</span>
+                  <strong>{t.name}</strong>
+                  <span>{t.width} × {t.height}칸 · {t.palette.length}색</span>
+                </span>
+                <span className="template-arrow" aria-hidden="true">→</span>
+              </button>
+            ))}
           </div>
         </section>
       ))}

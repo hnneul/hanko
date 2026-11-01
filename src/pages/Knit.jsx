@@ -148,7 +148,7 @@ export default function Knit({ pattern, level, onChange, onBack, onComplete }) {
               <span className="wake-dot" aria-hidden="true" /> 화면 켜두기 {awake ? '켜짐' : '꺼짐'}
             </button>
           )}
-          <Helper pattern={pattern} level={level} row={rows.find((r) => r.row === current)} />
+          <Helper pattern={pattern} level={level} row={activeRow} />
         </section>
       </div>
 
