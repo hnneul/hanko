@@ -42,8 +42,20 @@ const looks = {
   },
 }
 
-export const templates = TEMPLATES.map((t) => ({
+const patterned = TEMPLATES.map((t) => ({
   ...t,
   palette: looks[t.id].palette,
   cells: drawCells(t.width, t.height, looks[t.id].colorAt),
 }))
+
+// 처음부터 그리고 싶을 때: 같은 크기, 배색은 흰 바탕색 하나만, 무늬 없음
+const blank = patterned.map((t) => ({
+  ...t,
+  id: `${t.id}-blank`,
+  name: `빈 ${t.name}`,
+  blank: true,
+  palette: [{ name: '흰색', hex: '#fdfbf6' }],
+  cells: t.cells.map(() => 0),
+}))
+
+export const templates = [...patterned, ...blank]

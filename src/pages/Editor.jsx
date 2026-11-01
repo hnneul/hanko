@@ -170,6 +170,7 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
                 색 추가
               </button>
             )}
+            {palette.length === 1 && <p className="muted">"색 추가"로 칠할 색을 넣어 주세요.</p>}
             {palette.length > BEGINNER_COLORS && <p className="muted">초보에게는 2~3색을 추천해요.</p>}
           </div>
 

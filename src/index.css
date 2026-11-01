@@ -535,3 +535,7 @@ progress {
 .chat-ai {
   background: var(--color-surface-muted);
 }
+
+.template-group {
+  margin-top: 24px;
+}
