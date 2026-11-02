@@ -7,6 +7,8 @@ import { GRID_MIN, GRID_MAX, MAX_COLORS, LEVELS, CHAT_KEEP } from '../config.js'
 const PATTERNS_KEY = 'hanko:patterns'
 const LEVEL_KEY = 'hanko:level'
 const VIEW_KEY = 'hanko:view'
+const VIDEO_GUIDE_KEY = 'hanko:videoGuideHidden'
+const VIDEOS_KEY = 'hanko:videos'
 const PAGES = ['home', 'templates', 'editor', 'knit', 'video']
 const chatKey = (id) => `hanko:chat:${id}`
 const STATUSES = ['design', 'knitting', 'done']
@@ -86,6 +88,35 @@ export function loadView(storage) {
 
 export function saveView(view, storage) {
   write(storage, VIEW_KEY, view, true)
+}
+
+// 영상으로 배운 것 (선택-1): 정리한 단계를 내 작업실에 모아 둠. 자막 원문은 저장하지 않음
+function isValidVideo(v) {
+  return (
+    typeof v?.id === 'string' &&
+    typeof v.videoId === 'string' &&
+    typeof v.title === 'string' &&
+    Array.isArray(v.steps) &&
+    v.steps.every((s) => Number.isInteger(s?.time) && typeof s.title === 'string' && typeof s.desc === 'string')
+  )
+}
+
+export function loadVideos(storage) {
+  const list = read(storage, VIDEOS_KEY)
+  return Array.isArray(list) ? list.filter(isValidVideo) : []
+}
+
+export function saveVideos(videos, storage) {
+  write(storage, VIDEOS_KEY, videos)
+}
+
+// 영상 해설 안내 팝업을 "다시 보지 않기"로 닫았는지 (선택-1)
+export function loadGuideHidden(storage) {
+  return read(storage, VIDEO_GUIDE_KEY) === true
+}
+
+export function hideGuide(storage) {
+  write(storage, VIDEO_GUIDE_KEY, true)
 }
 
 // AI 도우미 대화, 도안마다 최근 CHAT_KEEP개만 (todo 7-5). 망가진 메시지는 뺌

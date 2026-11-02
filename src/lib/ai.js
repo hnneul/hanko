@@ -55,6 +55,7 @@ const PALETTE_SCHEMA = {
 const STEPS_SCHEMA = {
   type: 'OBJECT',
   properties: {
+    title: { type: 'STRING' },
     steps: {
       type: 'ARRAY',
       items: {
@@ -64,7 +65,7 @@ const STEPS_SCHEMA = {
       },
     },
   },
-  required: ['steps'],
+  required: ['title', 'steps'],
 }
 
 // "1:05", "1:02:03" → 초. 형식이 틀리면 null
@@ -157,9 +158,9 @@ export function parsePalettes(raw, count) {
   return out.includes(null) ? null : out
 }
 
-// 영상 해설 답 검사: 단계 0~VIDEO_STEPS_MAX개, 시각은 초로 바꿈. 틀리면 null
-// 빈 배열 = 뜨개 영상 자막이 아님
-export function parseSteps(raw) {
+// 영상 해설 답 검사 → { title, steps }. 단계 0~VIDEO_STEPS_MAX개, 시각은 초로 바꿈. 틀리면 null
+// 단계가 빈 배열 = 뜨개 영상 자막이 아님. 제목이 없으면 '영상 정리'
+export function parseVideo(raw) {
   let data
   try {
     data = JSON.parse(raw)
@@ -174,7 +175,7 @@ export function parseSteps(raw) {
     const desc = text(s?.desc, 200)
     return time !== null && title && desc ? { time, title, desc: desc.replace(/\*\*/g, '') } : null
   })
-  return out.includes(null) ? null : out
+  return out.includes(null) ? null : { title: text(data.title, 30) ?? '영상 정리', steps: out }
 }
 
 // 도우미 답: 마크다운 별표 빼고 길이 제한

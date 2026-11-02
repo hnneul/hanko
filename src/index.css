@@ -677,6 +677,12 @@ progress::-webkit-progress-value {
   background: var(--color-cream);
 }
 
+.pattern-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .pattern-preview .preview {
   border-radius: 0;
 }
@@ -759,7 +765,7 @@ progress::-webkit-progress-value {
   margin-bottom: 62px;
 }
 
-.page-intro > p:last-child {
+.page-intro > h1 + p {
   color: var(--color-text-muted);
   font-size: 1.02rem;
 }
@@ -1748,6 +1754,33 @@ progress::-webkit-progress-value {
   font: inherit;
   font-weight: 400;
   resize: vertical;
+}
+
+/* 들어오면 뜨는 사용 안내 */
+.video-guide {
+  width: min(640px, calc(100vw - 32px));
+  word-break: keep-all; /* 한국어도 단어 중간이 아니라 띄어쓰기에서 줄바꿈 */
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  color: inherit;
+}
+
+.video-guide::backdrop {
+  background: rgba(64, 62, 58, 0.4);
+}
+
+.video-guide h2 {
+  margin-top: 0;
+}
+
+.video-guide li {
+  margin-bottom: 6px;
+}
+
+.video-guide-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
 }
 
 /* 아래 단계를 누르며 내려가도 영상이 보이게 */

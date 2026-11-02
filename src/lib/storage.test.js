@@ -1,7 +1,7 @@
 // 실행: npm test
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { loadPatterns, savePatterns, loadLevel, saveLevel, loadView, saveView, loadChat, saveChat, removeChat } from './storage.js'
+import { loadPatterns, savePatterns, loadLevel, saveLevel, loadView, saveView, loadChat, saveChat, removeChat, loadGuideHidden, hideGuide, loadVideos, saveVideos } from './storage.js'
 import { progress } from './pattern.js'
 
 // localStorage 대신 쓰는 가짜 저장소
@@ -91,4 +91,19 @@ test('AI 대화: 도안마다 최근 20개만 저장, 망가진 메시지는 빼
   assert.deepEqual(loadChat('b', s), [{ me: true, text: '안녕' }])
   removeChat('a', s)
   assert.deepEqual(loadChat('a', s), [])
+})
+
+test('영상 해설 안내: 다시 보지 않기 저장 (선택-1)', () => {
+  const s = fakeStorage()
+  assert.equal(loadGuideHidden(s), false)
+  hideGuide(s)
+  assert.equal(loadGuideHidden(s), true)
+})
+
+test('영상으로 배운 것: 저장 후 다시 읽기, 망가진 항목은 뺌 (선택-1)', () => {
+  const s = fakeStorage()
+  const video = { id: 'v', videoId: 'dQw4w9WgXcQ', title: '사각 코스터 기초', steps: [{ time: 65, title: '사슬뜨기', desc: '사슬 21코' }], updatedAt: 1 }
+  saveVideos([video, { id: 'x', steps: [{ time: '1:05' }] }], s)
+  assert.deepEqual(loadVideos(s), [video])
+  assert.deepEqual(loadVideos(fakeStorage({ 'hanko:videos': '{망가짐' })), [])
 })

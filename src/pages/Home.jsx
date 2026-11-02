@@ -6,7 +6,7 @@ import { SiteHeader } from '../components/Brand.jsx'
 const STATUS_NAMES = { design: '디자인 중', knitting: '뜨는 중', done: '완성' }
 
 // 내 작업실: 도안 목록, 이름 바꾸기, 삭제, 수준 설정 (PRD #4-6, #4-1)
-export default function Home({ patterns, level, onNew, onVideo, onOpen, onKnit, onRename, onDelete, onLevel }) {
+export default function Home({ patterns, videos, level, onNew, onVideo, onDeleteVideo, onOpen, onKnit, onRename, onDelete, onLevel }) {
   const sorted = [...patterns].sort((a, b) => b.updatedAt - a.updatedAt)
 
   function rename(p) {
@@ -21,7 +21,7 @@ export default function Home({ patterns, level, onNew, onVideo, onOpen, onKnit, 
   return (
     <main className="page workspace-page">
       <SiteHeader>
-        <button type="button" className="btn btn-sm" onClick={onVideo}>영상 보며 배우기</button>
+        <button type="button" className="btn btn-sm" onClick={() => onVideo()}>영상 보며 배우기</button>
         <details className="settings">
           <summary className="btn btn-sm">내 수준 설정</summary>
           <div className="card settings-pop">
@@ -98,6 +98,42 @@ export default function Home({ patterns, level, onNew, onVideo, onOpen, onKnit, 
                   )}
                   <button type="button" className="btn btn-sm" onClick={() => rename(p)}>이름 바꾸기</button>
                   <button type="button" className="btn btn-sm btn-quiet" onClick={() => remove(p)}>삭제</button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {videos.length > 0 && (
+        <section className="projects-section">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">LEARNED FROM VIDEOS</p>
+              <h2>영상으로 배운 것</h2>
+            </div>
+            <span className="count-pill">{videos.length}개</span>
+          </div>
+          <ul className="pattern-list">
+            {videos.map((v) => (
+              <li key={v.id} className="pattern-card">
+                <button type="button" className="pattern-open" onClick={() => onVideo(v.id)}>
+                  <span className="pattern-preview">
+                    <img src={`https://i.ytimg.com/vi/${v.videoId}/mqdefault.jpg`} alt="" loading="lazy" />
+                  </span>
+                  <span className="pattern-copy">
+                    <strong>{v.title}</strong>
+                    <span className="pattern-progress-copy">{v.steps.length}단계로 정리</span>
+                  </span>
+                </button>
+                <div className="pattern-actions">
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-quiet"
+                    onClick={() => confirm(`'${v.title}' 정리를 삭제할까요?`) && onDeleteVideo(v.id)}
+                  >
+                    삭제
+                  </button>
                 </div>
               </li>
             ))}
