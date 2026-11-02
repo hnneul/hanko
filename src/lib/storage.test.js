@@ -1,7 +1,7 @@
 // 실행: npm test
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { loadPatterns, savePatterns, loadLevel, saveLevel } from './storage.js'
+import { loadPatterns, savePatterns, loadLevel, saveLevel, loadView, saveView } from './storage.js'
 import { progress } from './pattern.js'
 
 // localStorage 대신 쓰는 가짜 저장소
@@ -70,4 +70,13 @@ test('수준 저장·읽기, 모르는 값은 null', () => {
 
 test('진행률: 5단 중 2단 → 40%', () => {
   assert.equal(progress(pattern), 40)
+})
+
+test('보던 화면 저장 후 다시 읽기, 모르는 값이면 내 작업실 (todo 7-2)', () => {
+  const s = fakeStorage()
+  assert.deepEqual(loadView(s), { page: 'home', openId: null, knitFrom: 'home' })
+  saveView({ page: 'knit', openId: 'a', knitFrom: 'editor' }, s)
+  assert.deepEqual(loadView(s), { page: 'knit', openId: 'a', knitFrom: 'editor' })
+  assert.equal(loadView(fakeStorage({ 'hanko:view': '{"page":"x"}' })).page, 'home')
+  assert.equal(loadView(fakeStorage({ 'hanko:view': '{망가짐' })).page, 'home')
 })

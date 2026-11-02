@@ -1,4 +1,4 @@
-// localStorage에 도안 목록·수준 저장 (PRD #7)
+// localStorage에 도안 목록·수준 저장, sessionStorage에 보던 화면 저장 (PRD #7)
 // 저장값이 망가져 있으면 에러 없이 빈 상태로 시작
 // storage는 테스트에서 가짜를 넘길 수 있게 인자로 받음
 
@@ -6,6 +6,8 @@ import { GRID_MIN, GRID_MAX, MAX_COLORS, LEVELS } from '../config.js'
 
 const PATTERNS_KEY = 'hanko:patterns'
 const LEVEL_KEY = 'hanko:level'
+const VIEW_KEY = 'hanko:view'
+const PAGES = ['home', 'templates', 'editor', 'knit']
 const STATUSES = ['design', 'knitting', 'done']
 
 const isInt = (n, min, max) => Number.isInteger(n) && n >= min && n <= max
@@ -33,17 +35,17 @@ export function isValidPattern(p) {
 }
 
 // 사이트 데이터가 막힌 브라우저는 localStorage를 읽기만 해도 에러가 나서 try 안에서 꺼냄
-function read(storage, key) {
+function read(storage, key, session) {
   try {
-    return JSON.parse((storage ?? localStorage).getItem(key))
+    return JSON.parse((storage ?? (session ? sessionStorage : localStorage)).getItem(key))
   } catch {
     return null
   }
 }
 
-function write(storage, key, value) {
+function write(storage, key, value, session) {
   try {
-    (storage ?? localStorage).setItem(key, JSON.stringify(value))
+    (storage ?? (session ? sessionStorage : localStorage)).setItem(key, JSON.stringify(value))
   } catch {
     // 저장 공간이 꽉 찼거나 막힌 브라우저: 화면은 그대로 씀
   }
@@ -67,4 +69,20 @@ export function loadLevel(storage) {
 
 export function saveLevel(level, storage) {
   write(storage, LEVEL_KEY, level)
+}
+
+// 새로고침해도 보던 화면으로 (todo 7-2). 탭을 닫으면 사라지도록 sessionStorage
+// 열린 도안이 지워졌으면 App이 내 작업실을 보여 줌
+export function loadView(storage) {
+  const v = read(storage, VIEW_KEY, true)
+  if (!PAGES.includes(v?.page)) return { page: 'home', openId: null, knitFrom: 'home' }
+  return {
+    page: v.page,
+    openId: typeof v.openId === 'string' ? v.openId : null,
+    knitFrom: v.knitFrom === 'editor' ? 'editor' : 'home',
+  }
+}
+
+export function saveView(view, storage) {
+  write(storage, VIEW_KEY, view, true)
 }
