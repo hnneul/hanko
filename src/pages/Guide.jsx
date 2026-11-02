@@ -62,6 +62,7 @@ export default function Guide({ saved, level, onSave, onBack, onHome }) {
   const [text, setText] = useState('')
   const [ai, setAi] = useState({ loading: false, error: '' })
   const [guide, setGuide] = useState(saved ?? null)
+  const [editing, setEditing] = useState(null) // 이름 바꾸는 중이면 입력 중인 이름
   const total = guide ? guideTotal(guide) : 0
 
   function update(next) {
@@ -89,9 +90,11 @@ export default function Guide({ saved, level, onSave, onBack, onHome }) {
     }
   }
 
-  function rename() {
-    const title = prompt('새 도안 이름', guide.title)?.trim()
+  function rename(e) {
+    e.preventDefault()
+    const title = editing.trim()
     if (title) update({ ...guide, title, updatedAt: Date.now() })
+    setEditing(null)
   }
 
   function toggle(key) {
@@ -149,10 +152,26 @@ export default function Guide({ saved, level, onSave, onBack, onHome }) {
         {guide && (
           <section className="guide-result">
             <div className="video-saved">
-              <div className="guide-title">
-                <h2>{guide.title}</h2>
-                <button type="button" className="btn btn-sm" onClick={rename}>이름 바꾸기</button>
-              </div>
+              {editing === null ? (
+                <div className="guide-title">
+                  <h2>{guide.title}</h2>
+                  <button type="button" className="btn btn-sm" onClick={() => setEditing(guide.title)}>이름 바꾸기</button>
+                </div>
+              ) : (
+                <form className="guide-title" onSubmit={rename}>
+                  <input
+                    className="text-input"
+                    value={editing}
+                    maxLength={30}
+                    autoFocus
+                    aria-label="도안 이름"
+                    onChange={(e) => setEditing(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Escape' && setEditing(null)}
+                  />
+                  <button type="submit" className="btn btn-sm btn-primary">저장</button>
+                  <button type="button" className="btn btn-sm btn-quiet" onClick={() => setEditing(null)}>취소</button>
+                </form>
+              )}
               <p className="muted">
                 {guide.done.length} / {total} 완료 · 내 작업실 "풀어 본 도안"에 저장돼 있어요.
               </p>

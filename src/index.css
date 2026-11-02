@@ -2128,6 +2128,11 @@ progress::-webkit-progress-value {
   margin: 0;
 }
 
+.guide-title .text-input {
+  flex: 1;
+  min-width: 0;
+}
+
 .guide-result progress {
   width: 100%;
 }
