@@ -6,3 +6,6 @@ dist
 .DS_Store
 *.log
 *.local
+
+# 캐릭터·로고 원본 (사이트에 안 올림)
+design-assets/
