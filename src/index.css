@@ -2106,6 +2106,12 @@ progress::-webkit-progress-value {
 }
 
 /* 도안 풀어 보기 (선택-2) */
+/* 풀이를 내려 봐도 입력칸·용어는 옆에 그대로 */
+.guide-side {
+  position: sticky;
+  top: 16px;
+}
+
 .guide-result progress {
   width: 100%;
 }
@@ -2215,6 +2221,10 @@ progress::-webkit-progress-value {
   /* 휴대폰에서 저장한 풀이를 다시 열면 입력칸보다 풀이가 먼저 */
   .guide-result {
     order: -1;
+  }
+
+  .guide-side {
+    position: static;
   }
 }
 

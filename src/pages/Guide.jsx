@@ -107,7 +107,7 @@ export default function Guide({ saved, level, onSave, onBack, onHome }) {
       </div>
 
       <div className="video-layout">
-        <div>
+        <div className="guide-side">
           {/* 용어는 입력칸 아래에: 풀이가 길어 맨 아래까지 내려가야 했음 */}
           <form className="card video-form" onSubmit={explain}>
             <label>
