@@ -107,25 +107,39 @@ export default function Guide({ saved, level, onSave, onBack, onHome }) {
       </div>
 
       <div className="video-layout">
-        <form className="card video-form" onSubmit={explain}>
-          <label>
-            글 도안
-            <textarea
-              className="text-input video-subtitles"
-              value={text}
-              maxLength={GUIDE_TEXT_MAX}
-              placeholder={'1단: 매직링, 짧은뜨기 6 [6]\n2단: 늘리기*6 [12]\n3단: (짧은뜨기, 늘리기)*6 [18]'}
-              onChange={(e) => setText(e.target.value)}
-            />
-          </label>
-          <p className="muted">
-            원형·입체 도안도 돼요. 글자를 복사할 수 없는 그림·사진 도안은 아직 안 돼요. 붙여 넣은 도안은 내 브라우저에만 저장돼요.
-          </p>
-          <button type="submit" className="btn btn-primary" disabled={ai.loading}>
-            {ai.loading ? '풀어 보는 중…' : 'AI로 풀어 보기'}
-          </button>
-          {ai.error && <p className="error" role="alert">{ai.error}</p>}
-        </form>
+        <div>
+          {/* 용어는 입력칸 아래에: 풀이가 길어 맨 아래까지 내려가야 했음 */}
+          <form className="card video-form" onSubmit={explain}>
+            <label>
+              글 도안
+              <textarea
+                className="text-input video-subtitles"
+                value={text}
+                maxLength={GUIDE_TEXT_MAX}
+                placeholder={'1단: 매직링, 짧은뜨기 6 [6]\n2단: 늘리기*6 [12]\n3단: (짧은뜨기, 늘리기)*6 [18]'}
+                onChange={(e) => setText(e.target.value)}
+              />
+            </label>
+            <p className="muted">
+              원형·입체 도안도 돼요. 글자를 복사할 수 없는 그림·사진 도안은 아직 안 돼요. 붙여 넣은 도안은 내 브라우저에만 저장돼요.
+            </p>
+            <button type="submit" className="btn btn-primary" disabled={ai.loading}>
+              {ai.loading ? '풀어 보는 중…' : 'AI로 풀어 보기'}
+            </button>
+            {ai.error && <p className="error" role="alert">{ai.error}</p>}
+          </form>
+          {guide?.terms.length > 0 && (
+            <section className="guide-part">
+              <h3>이 도안에 나온 용어</h3>
+              {guide.terms.map((t) => (
+                <details key={t.word} className="card guide-term">
+                  <summary>{t.word}</summary>
+                  <p>{t.desc}</p>
+                </details>
+              ))}
+            </section>
+          )}
+        </div>
 
         {guide && (
           <section className="guide-result">
@@ -180,17 +194,6 @@ export default function Guide({ saved, level, onSave, onBack, onHome }) {
               </section>
             ))}
 
-            {guide.terms.length > 0 && (
-              <section className="guide-part">
-                <h3>이 도안에 나온 용어</h3>
-                {guide.terms.map((t) => (
-                  <details key={t.word} className="card guide-term">
-                    <summary>{t.word}</summary>
-                    <p>{t.desc}</p>
-                  </details>
-                ))}
-              </section>
-            )}
             <p className="muted">AI가 글만 보고 풀어서 틀릴 수 있어요. 원문과 함께 확인해 주세요.</p>
           </section>
         )}
