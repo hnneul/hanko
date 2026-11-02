@@ -18,6 +18,7 @@ import {
   GUIDE_ROWS_MAX,
   GUIDE_LEVELS,
   GUIDE_PROMPT,
+  GUIDE_HELP_PROMPT,
 } from '../config.js'
 
 // 글자: 앞뒤 공백 빼고 1~max자가 아니면 null
@@ -153,6 +154,20 @@ export function buildRequest(body) {
     const numbered = guideLines(pattern).map((l, i) => `${i + 1}: ${l.replace(COUNT_RE, '').trim()}`)
     return { system: `${GUIDE_PROMPT}\n\n${level}`, prompt: `도안:\n${numbered.join('\n')}`, schema: GUIDE_SCHEMA, maxTokens: 6000 }
   }
+  if (body?.type === 'guide-help') {
+    const question = text(body.question, AI_QUESTION_MAX)
+    const level = LEVEL_PROMPTS[body.level]
+    const r = body.row ?? {}
+    const label = text(r.label, 20)
+    const original = text(r.original, 1000)
+    const steps = Array.isArray(r.steps) && r.steps.length <= 10 ? r.steps.map((s) => text(s, 200)) : null
+    if (!question || !level || !label || !original || !steps?.length || steps.includes(null)) return null
+    return {
+      system: `${GUIDE_HELP_PROMPT}\n\n${level}`,
+      prompt: [`지금 단: ${label}`, `도안 원문: ${original}`, `풀이:\n${steps.map((s, i) => `${i + 1}. ${s}`).join('\n')}`, `질문: ${question}`].join('\n'),
+      maxTokens: 500,
+    }
+  }
   if (body?.type === 'help') {
     const question = text(body.question, AI_QUESTION_MAX)
     const level = LEVEL_PROMPTS[body.level]
@@ -175,6 +190,8 @@ export function buildRequest(body) {
       })
       if (!row || typeof r.fromRight !== 'boolean' || !parts || parts.includes(null)) return null
       rowText = `지금 단: ${row}단, ${r.fromRight ? '오른쪽 → 왼쪽' : '왼쪽 → 오른쪽'}으로, 뜨는 순서: ${parts.join(' → ')}`
+      // 1단은 시작 사슬에 바로 뜸. 안 알려 주면 AI가 기둥코 사슬을 한 번 더 뜨라고 함
+      if (row === 1) rowText += `\n1단 시작법: 시작 사슬 ${width + 1}코를 뜬 상태. 사슬을 더 뜨지 않고 바늘에서 두 번째 사슬부터 짧은뜨기를 뜬다.`
     }
 
     return {

@@ -122,3 +122,19 @@ test('도안 풀이 답: 원문은 줄 번호로 꺼내고, 형식이 틀리면 
   assert.equal(parse({ parts: [{ name: '본체', rows: Array(61).fill(row()) }] }), null)
   assert.equal(parseGuide('{"parts": [', lines), null)
 })
+
+test('도안 단 묻기 요청: 원문·풀이·질문을 담고, 틀린 값은 거절', () => {
+  const body = { type: 'guide-help', level: 'beginner', question: '늘리기는 어디에 해요?', row: { label: '3단', original: '3단: (짧은뜨기, 늘리기)*6 [18]', steps: ['짧은뜨기 1번', '늘리기 1번'] } }
+  const r = buildRequest(body)
+  assert.match(r.prompt, /도안 원문: 3단: \(짧은뜨기, 늘리기\)\*6 \[18\]/)
+  assert.match(r.prompt, /1\. 짧은뜨기 1번\n2\. 늘리기 1번/)
+  assert.match(r.system, /지어내지 않는다/)
+  assert.equal(buildRequest({ ...body, row: { ...body.row, steps: [] } }), null)
+  assert.equal(buildRequest({ ...body, row: { ...body.row, original: '가'.repeat(1001) } }), null)
+  assert.equal(buildRequest({ ...body, question: ' ' }), null)
+})
+
+test('도우미 1단 질문에는 시작 사슬에 바로 뜨는 법을 붙임', () => {
+  assert.match(buildRequest({ ...help, row: { ...help.row, row: 1 } }).prompt, /바늘에서 두 번째 사슬부터/)
+  assert.doesNotMatch(buildRequest({ ...help, row: { ...help.row, row: 2 } }).prompt, /1단 시작법/)
+})

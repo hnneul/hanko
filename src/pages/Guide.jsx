@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { GUIDE_TEXT_MAX } from '../config.js'
+import { AI_QUESTION_MAX, GUIDE_TEXT_MAX } from '../config.js'
 import { askAI, writtenCount } from '../lib/ai.js'
 import { SiteHeader } from '../components/Brand.jsx'
 
@@ -12,6 +12,47 @@ function CountCheck({ row }) {
     <p className="guide-count warn" role="note">
       ⚠ 도안은 {written}코인데 {row.count ? `풀이는 ${row.count}코예요` : '풀이에서 코 수를 세지 못했어요'}. 이 단은 원문을 다시 확인해 주세요.
     </p>
+  )
+}
+
+// 이 단 물어보기: 원문·풀이를 함께 보내 지금 단에 대해 묻기. 답은 저장하지 않음
+function RowAsk({ row, level }) {
+  const [question, setQuestion] = useState('')
+  const [ai, setAi] = useState({ loading: false, error: '', answer: '' })
+
+  async function ask(e) {
+    e.preventDefault()
+    if (!question.trim()) return
+    setAi({ loading: true, error: '', answer: '' })
+    try {
+      const { label, original, steps } = row
+      const { answer } = await askAI({ type: 'guide-help', level, question: question.trim(), row: { label, original, steps } })
+      setAi({ loading: false, error: '', answer })
+    } catch (err) {
+      setAi({ loading: false, error: err.message, answer: '' })
+    }
+  }
+
+  return (
+    <details className="guide-ask">
+      <summary>이 단 물어보기</summary>
+      <form className="ask" onSubmit={ask}>
+        <input
+          className="text-input"
+          value={question}
+          maxLength={AI_QUESTION_MAX}
+          placeholder="예: 늘리기는 어느 코에 해요?"
+          onChange={(e) => setQuestion(e.target.value)}
+          aria-label={`${row.label}에 대해 질문`}
+        />
+        <button type="submit" className="btn btn-primary" disabled={ai.loading || !question.trim()}>
+          묻기
+        </button>
+      </form>
+      {ai.loading && <p className="muted">답을 생각하고 있어요…</p>}
+      {ai.answer && <p className="guide-answer" aria-live="polite">{ai.answer}</p>}
+      {ai.error && <p className="error" role="alert">{ai.error}</p>}
+    </details>
   )
 }
 
@@ -114,6 +155,7 @@ export default function Guide({ saved, level, onSave, onBack, onHome }) {
                           {row.steps.map((s, si) => <li key={si}>{s}</li>)}
                         </ol>
                         <CountCheck row={row} />
+                        <RowAsk row={row} level={level} />
                       </li>
                     )
                   })}

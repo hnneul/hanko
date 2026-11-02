@@ -2142,6 +2142,23 @@ progress::-webkit-progress-value {
   color: var(--color-warning);
 }
 
+.guide-ask summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--color-primary);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.guide-answer {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--color-surface-muted);
+  white-space: pre-wrap;
+}
+
 .guide-term {
   margin-bottom: 8px;
   padding: 12px 16px;
