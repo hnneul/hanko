@@ -1,7 +1,7 @@
 // 실행: npm test
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { finishedSize, resizeCells, resizeLosesPaint, removeColor, knitRows, startText, withDoneRows } from './pattern.js'
+import { finishedSize, resizeCells, resizeLosesPaint, removeColor, knitRows, squareRows, startText, withDoneRows } from './pattern.js'
 import { templates } from '../templates.js'
 
 const gauge = { stitches: 20, rows: 22 }
@@ -57,4 +57,9 @@ test('체크한 단에 따라 상태 바뀜', () => {
   assert.equal(withDoneRows(p, []).status, 'design')
   assert.equal(withDoneRows(p, [1]).status, 'knitting')
   assert.equal(withDoneRows(p, [1, 2]).status, 'done')
+})
+
+test('정사각형 단 수: 20코·게이지 20코 22단 → 22단 (todo 7-4)', () => {
+  assert.equal(squareRows(20, gauge), 22)
+  assert.equal(squareRows(30, { stitches: 20, rows: 20 }), 30)
 })

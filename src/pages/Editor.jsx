@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { GRID_MIN, GRID_MAX, MAX_COLORS, AI_MOOD_MAX } from '../config.js'
-import { finishedSize, knitRows, resizeCells, resizeLosesPaint, removeColor, startText } from '../lib/pattern.js'
+import { finishedSize, knitRows, resizeCells, resizeLosesPaint, removeColor, squareRows, startText } from '../lib/pattern.js'
 import { askAI } from '../lib/ai.js'
 import Preview from '../components/Preview.jsx'
 import { SiteHeader } from '../components/Brand.jsx'
@@ -17,6 +17,7 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
   const painting = useRef(null) // 드래그 중: { cells: 최신 칸, last: 직전 칸 번호 }
   const current = Math.min(color, palette.length - 1)
   const cm = finishedSize(width, height, gauge)
+  const square = squareRows(width, gauge)
   const rows = knitRows(pattern)
   const hasProgress = pattern.doneRows.length > 0
 
@@ -191,6 +192,11 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
                   />
                 </label>
               </div>
+              {square !== height && square >= GRID_MIN && square <= GRID_MAX && (
+                <p className="muted">
+                  지금 완성 크기는 {cm.width} × {cm.height}cm예요. 정사각형으로 뜨려면 세로를 {square}단으로 해 보세요.
+                </p>
+              )}
               <button type="submit" className="btn btn-sm">크기 적용</button>
             </form>
 

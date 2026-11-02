@@ -28,6 +28,11 @@ export function finishedSize(width, height, gauge) {
   }
 }
 
+// 가로 칸 수 그대로 완성품이 정사각형이 되는 단 수 (todo 7-4)
+export function squareRows(width, gauge) {
+  return Math.round((width * gauge.rows) / gauge.stitches)
+}
+
 // 왼쪽 아래(1단 시작점) 기준으로 크기 바꾸기. 새로 생긴 칸은 바탕색(0) (PRD #9)
 export function resizeCells(cells, width, height, newWidth, newHeight) {
   const shift = newHeight - height
