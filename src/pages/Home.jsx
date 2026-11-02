@@ -46,16 +46,18 @@ export default function Home({ patterns, videos, guides, level, onNew, onVideo, 
         <div>
           <p className="eyebrow">MY CROCHET STUDIO</p>
           <h1>내 작업실</h1>
-          <p>그리던 도안을 이어서 완성하거나, 새로운 무늬를 한 코씩 시작해 보세요.</p>
+          <p>그리던 도안을 이어서 완성하거나, <br />
+          새로운 무늬를 한 코씩 시작해 보세요.</p>
         </div>
-        <button type="button" className="new-pattern-card" onClick={onNew}>
+        {/* 도안이 없을 때는 아래 "첫 도안 시작하기"만 보이게 */}
+        {sorted.length > 0 && <button type="button" className="new-pattern-card" onClick={onNew}>
           <span className="new-pattern-icon" aria-hidden="true">+</span>
           <span>
             <strong>새 도안 만들기</strong>
             <small>빈 격자 또는 템플릿으로 시작</small>
           </span>
           <span className="new-pattern-arrow" aria-hidden="true">→</span>
-        </button>
+        </button>}
       </section>
 
       {sorted.length === 0 ? (
@@ -66,7 +68,7 @@ export default function Home({ patterns, videos, guides, level, onNew, onVideo, 
           <div>
             <p className="eyebrow">YOUR FIRST PATTERN</p>
             <h2>첫 도안을 만들어 보세요</h2>
-            <p>템플릿을 고르고 원하는 칸에 색을 칠하면 세상에 하나뿐인 내 도안이 돼요.</p>
+            <p>템플릿을 고르고 칸에 색을 칠하면 나만의 도안이 돼요.</p>
             <button type="button" className="btn btn-primary" onClick={onNew}>첫 도안 시작하기</button>
           </div>
         </section>
