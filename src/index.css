@@ -751,6 +751,44 @@ progress::-webkit-progress-value {
   border-top: 1px solid var(--color-border);
 }
 
+/* 상단 메뉴: 기능은 연초록 알약, 설명 방식은 아이콘 버튼 */
+.nav-pill {
+  gap: 6px;
+  border-color: transparent;
+  border-radius: 999px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
+
+.nav-pill:hover {
+  border-color: transparent;
+  background: #dce7d8;
+}
+
+.nav-pill svg,
+.nav-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav-icon {
+  width: 38px;
+  min-width: 38px;
+  padding: 0;
+  border-radius: 50%;
+  color: var(--color-primary-dark);
+}
+
+.nav-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
 .settings {
   position: relative;
   flex-shrink: 0;
@@ -2500,13 +2538,6 @@ progress::-webkit-progress-value {
   .pattern-open {
     grid-template-columns: 112px minmax(0, 1fr);
     gap: 14px;
-  }
-
-  .settings summary {
-    max-width: 108px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .page-intro {

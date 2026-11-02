@@ -48,10 +48,22 @@ export default function Home({ patterns, videos, guides, level, onNew, onVideo, 
   return (
     <main className="page workspace-page">
       <SiteHeader>
-        <button type="button" className="btn btn-sm" onClick={() => onGuide()}>도안 풀어 보기</button>
-        <button type="button" className="btn btn-sm" onClick={() => onVideo()}>영상 보며 배우기</button>
+        {/* 기능은 연초록 알약, 거의 안 바꾸는 설명 방식은 톱니바퀴 아이콘으로 */}
+        <button type="button" className="btn btn-sm nav-pill" onClick={() => onGuide()}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0M3 6v13M12 6v13M21 6v13" /></svg>
+          도안 풀어 보기
+        </button>
+        <button type="button" className="btn btn-sm nav-pill" onClick={() => onVideo()}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13 -8z" /></svg>
+          영상 보며 배우기
+        </button>
         <details className="settings">
-          <summary className="btn btn-sm">설명 방식</summary>
+          <summary className="btn btn-sm nav-icon" aria-label="설명 방식" title="설명 방식">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </summary>
           <div className="card settings-pop">
             <p className="settings-title">AI 설명 방식</p>
             {LEVELS.map((l) => (
