@@ -2,7 +2,7 @@
 // 키는 환경 변수 GEMINI_API_KEY에서만 읽고, 로그·응답에 넣지 않음
 
 import { AI_MODEL } from '../src/config.js'
-import { buildRequest, parsePalettes, parseVideo, cleanAnswer } from '../src/lib/ai.js'
+import { buildRequest, parsePalettes, parseVideo, parseGuide, guideLines, cleanAnswer } from '../src/lib/ai.js'
 
 const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${AI_MODEL}:generateContent`
 
@@ -47,6 +47,13 @@ export default async function handler(req, res) {
         if (video) return res.status(200).json(video)
       }
       return res.status(502).json({ error: '단계 형식이 맞지 않아요' })
+    }
+    if (req.body.type === 'guide') {
+      for (let i = 0; i < 2; i++) {
+        const guide = parseGuide(await gemini(request), guideLines(req.body.text))
+        if (guide) return res.status(200).json(guide)
+      }
+      return res.status(502).json({ error: '풀이 형식이 맞지 않아요' })
     }
     const answer = cleanAnswer(await gemini(request))
     if (!answer) return res.status(502).json({ error: '답이 비었어요' })

@@ -6,7 +6,7 @@ import { SiteHeader } from '../components/Brand.jsx'
 const STATUS_NAMES = { design: '디자인 중', knitting: '뜨는 중', done: '완성' }
 
 // 내 작업실: 도안 목록, 이름 바꾸기, 삭제, 수준 설정 (PRD #4-6, #4-1)
-export default function Home({ patterns, videos, level, onNew, onVideo, onDeleteVideo, onOpen, onKnit, onRename, onDelete, onLevel }) {
+export default function Home({ patterns, videos, guides, level, onNew, onVideo, onDeleteVideo, onGuide, onDeleteGuide, onOpen, onKnit, onRename, onDelete, onLevel }) {
   const sorted = [...patterns].sort((a, b) => b.updatedAt - a.updatedAt)
 
   function rename(p) {
@@ -21,6 +21,7 @@ export default function Home({ patterns, videos, level, onNew, onVideo, onDelete
   return (
     <main className="page workspace-page">
       <SiteHeader>
+        <button type="button" className="btn btn-sm" onClick={() => onGuide()}>도안 풀어 보기</button>
         <button type="button" className="btn btn-sm" onClick={() => onVideo()}>영상 보며 배우기</button>
         <details className="settings">
           <summary className="btn btn-sm">내 수준 설정</summary>
@@ -101,6 +102,43 @@ export default function Home({ patterns, videos, level, onNew, onVideo, onDelete
                 </div>
               </li>
             ))}
+          </ul>
+        </section>
+      )}
+
+      {guides.length > 0 && (
+        <section className="projects-section">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">PATTERN GUIDES</p>
+              <h2>풀어 본 도안</h2>
+            </div>
+            <span className="count-pill">{guides.length}개</span>
+          </div>
+          <ul className="pattern-list">
+            {guides.map((g) => {
+              const total = g.parts.reduce((n, p) => n + p.rows.length, 0)
+              return (
+                <li key={g.id} className="pattern-card">
+                  <button type="button" className="pattern-open" onClick={() => onGuide(g.id)}>
+                    <span className="pattern-copy">
+                      <strong>{g.title}</strong>
+                      <span className="pattern-progress-copy">{g.done.length} / {total} 완료</span>
+                      <progress value={g.done.length} max={total} aria-label="진행률" />
+                    </span>
+                  </button>
+                  <div className="pattern-actions">
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-quiet"
+                      onClick={() => confirm(`'${g.title}' 풀이를 삭제할까요?`) && onDeleteGuide(g.id)}
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </li>
+              )
+            })}
           </ul>
         </section>
       )}

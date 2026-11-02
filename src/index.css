@@ -1849,9 +1849,93 @@ progress::-webkit-progress-value {
   font-variant-numeric: tabular-nums;
 }
 
+/* 도안 풀어 보기 (선택-2) */
+.guide-result progress {
+  width: 100%;
+}
+
+.guide-part h3 {
+  margin: 20px 0 10px;
+}
+
+.guide-row {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+}
+
+.guide-row.done {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.guide-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.guide-check input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--color-primary);
+}
+
+.guide-original {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  white-space: pre-wrap;
+}
+
+.guide-steps {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.guide-steps li {
+  margin-bottom: 4px;
+}
+
+.guide-count {
+  margin: 0;
+  font-weight: 700;
+}
+
+.guide-count.ok {
+  color: var(--color-success);
+}
+
+.guide-count.warn {
+  color: var(--color-warning);
+}
+
+.guide-term {
+  margin-bottom: 8px;
+  padding: 12px 16px;
+}
+
+.guide-term summary {
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.guide-term p {
+  margin: 8px 0 0;
+}
+
 @media (max-width: 760px) {
   .video-layout {
     grid-template-columns: 1fr;
+  }
+
+  /* 휴대폰에서 저장한 풀이를 다시 열면 입력칸보다 풀이가 먼저 */
+  .guide-result {
+    order: -1;
   }
 }
 

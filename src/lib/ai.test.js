@@ -1,7 +1,7 @@
 // 실행: npm test
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { buildRequest, parsePalettes, parseVideo, toSeconds, youtubeId, cleanAnswer } from './ai.js'
+import { buildRequest, parsePalettes, parseVideo, parseGuide, writtenCount, toSeconds, youtubeId, cleanAnswer } from './ai.js'
 
 const help = {
   type: 'help',
@@ -82,4 +82,43 @@ test('유튜브 주소 → 영상 id (선택-1)', () => {
   assert.equal(youtubeId(`https://youtu.be/${id}?si=abc`), id)
   assert.equal(youtubeId(`https://youtube.com/shorts/${id}`), id)
   assert.equal(youtubeId('https://example.com/watch?v=abc'), null)
+})
+
+test('도안 풀이 요청: 설명 방식별 지시문, 5000자까지 (선택-2)', () => {
+  const r = buildRequest({ type: 'guide', level: 'beginner', text: '1단: 매직링, 짧은뜨기 6 [6]\n2단: 늘리기 (12코)' })
+  // 적힌 코 수는 지우고 줄 번호를 붙임: AI가 베끼지 않고 직접 세게
+  assert.match(r.prompt, /1: 1단: 매직링, 짧은뜨기 6\n2: 2단: 늘리기$/)
+  assert.match(r.system, /처음 잡는다/)
+  assert.match(buildRequest({ type: 'guide', level: 'basic', text: '1단' }).system, /짧게/)
+  assert.ok(r.schema)
+  assert.equal(buildRequest({ type: 'guide', level: 'beginner', text: '  ' }), null)
+  assert.equal(buildRequest({ type: 'guide', level: 'pro', text: '1단' }), null)
+  assert.equal(buildRequest({ type: 'guide', level: 'basic', text: '가'.repeat(5001) }), null)
+})
+
+test('도안 원문의 코 수 읽기: [18], (16코), 없으면 null (선택-2)', () => {
+  assert.equal(writtenCount('3단: 사슬뜨기, (짧은뜨기, 늘리기)*6, 빼뜨기 [18]'), 18)
+  assert.equal(writtenCount('2단: 짧은뜨기 늘려뜨기 (16코)'), 16)
+  assert.equal(writtenCount('7단: [짧은뜨기, 짧은뜨기 2코 모아뜨기]*반복 (8코)'), 8)
+  assert.equal(writtenCount('8단: [짧은뜨기 2코 모아뜨기]*반복'), null)
+  assert.equal(writtenCount('실 끊고 마무리'), null)
+})
+
+test('도안 풀이 답: 원문은 줄 번호로 꺼내고, 형식이 틀리면 null (선택-2)', () => {
+  const lines = ['1단: 매직링, 짧은뜨기 6 [6]', '2단: 사슬뜨기,', '  늘리기*6 [12]']
+  const row = (label = '1단', from = 1, to = 1) => ({ label, from, to, count: 6, steps: ['매직링을 만들어요.', '고리 안에 **짧은뜨기** 6번'] })
+  const parse = (data) => parseGuide(JSON.stringify(data), lines)
+  const ok = parse({ title: '작은 공', parts: [{ name: '본체', rows: [row(), row('2단', 2, 3)] }], terms: [{ word: '매직링', desc: '고리' }, { word: '', desc: 'x' }] })
+  assert.equal(ok.title, '작은 공')
+  assert.equal(ok.parts[0].rows[0].original, '1단: 매직링, 짧은뜨기 6 [6]')
+  assert.equal(ok.parts[0].rows[1].original, '2단: 사슬뜨기,\n  늘리기*6 [12]')
+  assert.equal(ok.parts[0].rows[0].steps[1], '고리 안에 짧은뜨기 6번')
+  assert.deepEqual(ok.terms, [{ word: '매직링', desc: '고리' }])
+  assert.deepEqual(parse({ title: '', parts: [], terms: [] }), { title: '도안 풀이', parts: [], terms: [] })
+  assert.equal(parse({ parts: [{ name: '본체', rows: [row('1단', 4, 4)] }] }), null) // 없는 줄
+  assert.equal(parse({ parts: [{ name: '본체', rows: [row('1단', 3, 2)] }] }), null) // 거꾸로
+  assert.equal(parse({ parts: [{ name: '본체', rows: [{ ...row(), count: -1 }] }] }), null)
+  assert.equal(parse({ parts: [{ name: '본체', rows: [{ ...row(), steps: [] }] }] }), null)
+  assert.equal(parse({ parts: [{ name: '본체', rows: Array(61).fill(row()) }] }), null)
+  assert.equal(parseGuide('{"parts": [', lines), null)
 })

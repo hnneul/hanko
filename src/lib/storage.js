@@ -9,7 +9,8 @@ const LEVEL_KEY = 'hanko:level'
 const VIEW_KEY = 'hanko:view'
 const VIDEO_GUIDE_KEY = 'hanko:videoGuideHidden'
 const VIDEOS_KEY = 'hanko:videos'
-const PAGES = ['home', 'templates', 'editor', 'knit', 'video']
+const GUIDES_KEY = 'hanko:guides'
+const PAGES = ['home', 'templates', 'editor', 'knit', 'video', 'guide']
 const chatKey = (id) => `hanko:chat:${id}`
 const STATUSES = ['design', 'knitting', 'done']
 
@@ -108,6 +109,33 @@ export function loadVideos(storage) {
 
 export function saveVideos(videos, storage) {
   write(storage, VIDEOS_KEY, videos)
+}
+
+// 풀어 본 도안 (선택-2): 풀이와 체크한 단("부분번호-단번호"). 도안 원문 전체는 저장하지 않음
+function isValidGuide(g) {
+  return (
+    typeof g?.id === 'string' &&
+    typeof g.title === 'string' &&
+    Array.isArray(g.parts) &&
+    g.parts.every(
+      (p) =>
+        typeof p?.name === 'string' &&
+        Array.isArray(p.rows) &&
+        p.rows.every((r) => typeof r?.label === 'string' && typeof r.original === 'string' && Number.isInteger(r.count) && Array.isArray(r.steps)),
+    ) &&
+    Array.isArray(g.terms) &&
+    Array.isArray(g.done) &&
+    g.done.every((k) => typeof k === 'string')
+  )
+}
+
+export function loadGuides(storage) {
+  const list = read(storage, GUIDES_KEY)
+  return Array.isArray(list) ? list.filter(isValidGuide) : []
+}
+
+export function saveGuides(guides, storage) {
+  write(storage, GUIDES_KEY, guides)
 }
 
 // 영상 해설 안내 팝업을 "다시 보지 않기"로 닫았는지 (선택-1)

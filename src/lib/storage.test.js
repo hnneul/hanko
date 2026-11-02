@@ -1,7 +1,7 @@
 // 실행: npm test
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { loadPatterns, savePatterns, loadLevel, saveLevel, loadView, saveView, loadChat, saveChat, removeChat, loadGuideHidden, hideGuide, loadVideos, saveVideos } from './storage.js'
+import { loadPatterns, savePatterns, loadLevel, saveLevel, loadView, saveView, loadChat, saveChat, removeChat, loadGuideHidden, hideGuide, loadVideos, saveVideos, loadGuides, saveGuides } from './storage.js'
 import { progress } from './pattern.js'
 
 // localStorage 대신 쓰는 가짜 저장소
@@ -106,4 +106,12 @@ test('영상으로 배운 것: 저장 후 다시 읽기, 망가진 항목은 뺌
   saveVideos([video, { id: 'x', steps: [{ time: '1:05' }] }], s)
   assert.deepEqual(loadVideos(s), [video])
   assert.deepEqual(loadVideos(fakeStorage({ 'hanko:videos': '{망가짐' })), [])
+})
+
+test('풀어 본 도안 저장 후 읽기, 망가진 항목은 뺌 (선택-2)', () => {
+  const s = fakeStorage()
+  const guide = { id: 'g1', title: '작은 공', parts: [{ name: '본체', rows: [{ label: '1단', original: '1단', count: 6, steps: ['매직링'] }] }], terms: [], done: ['0-0'] }
+  saveGuides([guide, { ...guide, id: 'g2', done: [0] }, { id: 'g3' }], s)
+  assert.deepEqual(loadGuides(s), [guide])
+  assert.deepEqual(loadGuides(fakeStorage({ 'hanko:guides': '{망가짐' })), [])
 })
