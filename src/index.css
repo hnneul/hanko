@@ -144,6 +144,16 @@ p {
   gap: 14px;
 }
 
+.brand-home {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
 .brand-copy {
   display: grid;
   line-height: 1;

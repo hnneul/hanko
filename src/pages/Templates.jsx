@@ -8,10 +8,10 @@ const GROUPS = [
   { title: '무늬 템플릿', desc: '무늬가 칠해진 템플릿을 골라 색과 모양을 바꿔요.', items: templates.filter((t) => !t.blank) },
 ]
 
-export default function Templates({ onBack, onPick }) {
+export default function Templates({ onBack, onHome, onPick }) {
   return (
     <main className="page templates-page">
-      <SiteHeader>
+      <SiteHeader onHome={onHome}>
         <button type="button" className="btn btn-sm" onClick={onBack}>← 내 작업실</button>
       </SiteHeader>
 

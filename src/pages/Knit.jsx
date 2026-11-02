@@ -7,7 +7,7 @@ import { SiteHeader } from '../components/Brand.jsx'
 const canWakeLock = typeof navigator !== 'undefined' && 'wakeLock' in navigator
 
 // 따라 뜨기: 단별 설명 + 작은 격자, 한 단씩 체크 (PRD #4-4)
-export default function Knit({ pattern, level, onChange, onBack, onComplete }) {
+export default function Knit({ pattern, level, onChange, onBack, onHome, onComplete }) {
   const rows = knitRows(pattern)
   const { doneRows, palette } = pattern
   // 다시 들어오면 첫 번째 안 끝낸 단부터
@@ -44,7 +44,7 @@ export default function Knit({ pattern, level, onChange, onBack, onComplete }) {
 
   return (
     <main className="page knit-page">
-      <SiteHeader>
+      <SiteHeader onHome={onHome}>
         <button type="button" className="btn btn-sm" onClick={onBack}>← 돌아가기</button>
       </SiteHeader>
 

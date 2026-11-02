@@ -8,7 +8,7 @@ import { SiteHeader } from '../components/Brand.jsx'
 const BEGINNER_COLORS = 3
 const RESET_PROGRESS = { doneRows: [], status: 'design' }
 
-export default function Editor({ pattern, onChange, onBack, onKnit }) {
+export default function Editor({ pattern, onChange, onBack, onHome, onKnit }) {
   const { width, height, cells, palette, gauge } = pattern
   const [color, setColor] = useState(1)
   const [size, setSize] = useState({ width, height })
@@ -103,7 +103,7 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
 
   return (
     <main className="page editor-page">
-      <SiteHeader>
+      <SiteHeader onHome={onHome}>
         <button type="button" className="btn btn-sm" onClick={onBack}>← 내 작업실</button>
       </SiteHeader>
 

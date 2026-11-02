@@ -46,6 +46,7 @@ function App() {
     return (
       <Templates
         onBack={() => setPage('home')}
+        onHome={() => setPage('home')}
         onPick={(t) => {
           const p = createPattern(t)
           setPatterns((list) => [p, ...list])
@@ -61,6 +62,7 @@ function App() {
         pattern={pattern}
         onChange={(p) => updatePattern({ ...p, updatedAt: Date.now() })}
         onBack={() => setPage('home')}
+        onHome={() => setPage('home')}
         onKnit={() => {
           setKnitFrom('editor')
           setPage('knit')
@@ -75,6 +77,7 @@ function App() {
         level={level}
         onChange={(p) => updatePattern({ ...p, updatedAt: Date.now() })}
         onBack={() => setPage(knitFrom)}
+        onHome={() => setPage('home')}
         onComplete={() => setPage('home')}
       />
     )
