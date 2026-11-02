@@ -90,9 +90,9 @@ export default function Home({ patterns, level, onNew, onOpen, onKnit, onRename,
                   </span>
                 </button>
                 <div className="pattern-actions">
-                  {p.status === 'knitting' && (
+                  {p.status !== 'done' && (
                     <button type="button" className="btn btn-sm btn-primary" onClick={() => onKnit(p.id)}>
-                      이어서 뜨기
+                      {p.status === 'knitting' ? '이어서 뜨기' : '따라 뜨기'}
                     </button>
                   )}
                   <button type="button" className="btn btn-sm" onClick={() => rename(p)}>이름 바꾸기</button>
