@@ -36,6 +36,15 @@ test('도안 저장 후 다시 읽기 (새로고침)', () => {
   assert.deepEqual(loadPatterns(s), [pattern, { ...pattern, id: 'b' }])
 })
 
+test('예전 템플릿의 베이지빛 흰색은 실제 흰색으로 바꿔 읽는다', () => {
+  const legacy = {
+    ...pattern,
+    palette: [{ name: '흰색', hex: '#fdfbf6' }, { name: '빨강', hex: '#cc3333' }],
+  }
+  const s = fakeStorage({ 'hanko:patterns': JSON.stringify([legacy]) })
+  assert.equal(loadPatterns(s)[0].palette[0].hex, '#ffffff')
+})
+
 test('저장값이 없거나 망가졌으면 빈 목록', () => {
   assert.deepEqual(loadPatterns(fakeStorage()), [])
   assert.deepEqual(loadPatterns(fakeStorage({ 'hanko:patterns': '{망가짐' })), [])

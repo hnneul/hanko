@@ -28,12 +28,14 @@ export default function Templates({ onBack, onHome, onPick }) {
               <h2>{g.title}</h2>
               <p>{g.desc}</p>
             </div>
-            <span className="count-pill">{g.items.length}가지</span>
+            {g.items.length > 1 && <span className="count-pill">{g.items.length}가지</span>}
           </div>
           <div className="template-list">
             {g.items.map((t) => (
               <button key={t.id} type="button" className="card template-card" onClick={() => onPick(t)}>
-                <span className="template-preview"><Preview pattern={{ ...t, gauge: DEFAULT_GAUGE }} maxWidth={190} /></span>
+                <span className="template-preview">
+                  <Preview pattern={{ ...t, gauge: DEFAULT_GAUGE }} maxWidth={190} showGrid={t.blank} />
+                </span>
                 <span className="template-copy">
                   <span className="template-type">{t.blank ? 'BLANK GRID' : 'PATTERN'}</span>
                   <strong>{t.name}</strong>

@@ -63,3 +63,7 @@ test('정사각형 단 수: 20코·게이지 20코 22단 → 22단 (todo 7-4)', 
   assert.equal(squareRows(20, gauge), 22)
   assert.equal(squareRows(30, { stitches: 20, rows: 20 }), 30)
 })
+
+test('빈 도안 시작은 크기 조절이 가능한 사각 코스터 하나만 제공한다', () => {
+  assert.deepEqual(templates.filter((template) => template.blank).map((template) => template.id), ['coaster-blank'])
+})

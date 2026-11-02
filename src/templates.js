@@ -27,7 +27,7 @@ function mountains(x, y) {
 const looks = {
   coaster: {
     palette: [
-      { name: '흰색', hex: '#fdfbf6' },
+      { name: '흰색', hex: '#ffffff' },
       { name: '딸기색', hex: '#d9576b' },
     ],
     colorAt: heart,
@@ -49,12 +49,12 @@ const patterned = TEMPLATES.map((t) => ({
 }))
 
 // 처음부터 그리고 싶을 때: 같은 크기, 배색은 흰 바탕색 하나만, 무늬 없음
-const blank = patterned.map((t) => ({
+const blank = patterned.filter((t) => t.id === 'coaster').map((t) => ({
   ...t,
   id: `${t.id}-blank`,
   name: `빈 ${t.name}`,
   blank: true,
-  palette: [{ name: '흰색', hex: '#fdfbf6' }],
+  palette: [{ name: '흰색', hex: '#ffffff' }],
   cells: t.cells.map(() => 0),
 }))
 

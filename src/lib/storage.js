@@ -13,6 +13,7 @@ const GUIDES_KEY = 'hanko:guides'
 const PAGES = ['home', 'templates', 'editor', 'knit', 'video', 'guide']
 const chatKey = (id) => `hanko:chat:${id}`
 const STATUSES = ['design', 'knitting', 'done']
+const LEGACY_WARM_WHITE = '#fdfbf6'
 
 const isInt = (n, min, max) => Number.isInteger(n) && n >= min && n <= max
 
@@ -58,7 +59,15 @@ function write(storage, key, value, session) {
 // 망가진 도안은 빼고, 목록 자체가 망가졌으면 빈 목록
 export function loadPatterns(storage) {
   const list = read(storage, PATTERNS_KEY)
-  return Array.isArray(list) ? list.filter(isValidPattern) : []
+  if (!Array.isArray(list)) return []
+  return list.filter(isValidPattern).map((pattern) => ({
+    ...pattern,
+    palette: pattern.palette.map((color) =>
+      color.name === '흰색' && color.hex.toLowerCase() === LEGACY_WARM_WHITE
+        ? { ...color, hex: '#ffffff' }
+        : color,
+    ),
+  }))
 }
 
 export function savePatterns(patterns, storage) {
