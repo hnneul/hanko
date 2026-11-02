@@ -1145,6 +1145,227 @@ progress::-webkit-progress-value {
   display: none;
 }
 
+/* 편집 프로그램형 작업 화면 */
+.editor-page {
+  max-width: 1500px;
+}
+
+.editor-page .site-header {
+  margin-bottom: 24px;
+}
+
+.editor-program {
+  overflow: hidden;
+  border: 1px solid #dedbd5;
+  border-radius: 28px;
+  background: #ffffff;
+  box-shadow: 0 18px 50px rgba(64, 62, 58, 0.07);
+}
+
+.editor-program-topbar {
+  display: flex;
+  min-height: 96px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.editor-program-topbar .eyebrow {
+  margin-bottom: 4px;
+}
+
+.editor-program-topbar h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
+
+.editor-program-body {
+  display: grid;
+  grid-template-columns: 300px minmax(420px, 1fr) 300px;
+  height: clamp(680px, calc(100svh - 180px), 820px);
+  min-height: 680px;
+}
+
+.editor-program-controls,
+.editor-program-summary {
+  min-width: 0;
+  min-height: 0;
+  max-height: 100%;
+  padding: 26px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d8d1c7 transparent;
+}
+
+.editor-program-controls {
+  border-right: 1px solid var(--color-border);
+}
+
+.editor-program-summary {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--color-border);
+}
+
+.program-column-title {
+  margin-bottom: 20px;
+}
+
+.program-column-title h2 {
+  margin-bottom: 5px;
+  font-size: 1.18rem;
+}
+
+.program-column-title p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.program-column-title strong {
+  color: var(--color-text);
+}
+
+.program-section {
+  padding: 20px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.program-section:first-of-type {
+  padding-top: 4px;
+  border-top: 0;
+}
+
+.program-section .tool-heading {
+  margin-bottom: 12px;
+}
+
+.program-section .swatch {
+  grid-template-columns: 36px 26px minmax(62px, 1fr) auto;
+  gap: 6px;
+  padding: 5px;
+}
+
+.program-section .swatch-pick {
+  width: 36px;
+  height: 36px;
+}
+
+.program-section .swatch input[type='color'] {
+  width: 26px;
+  height: 28px;
+}
+
+.program-section .swatch-name {
+  min-height: 38px;
+  padding-inline: 9px;
+}
+
+.program-section .fields {
+  margin-bottom: 10px;
+}
+
+.program-ai {
+  padding-bottom: 0;
+}
+
+.program-ai .ask {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.editor-program-canvas {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  max-height: 100%;
+  flex-direction: column;
+  padding: 26px 30px 22px;
+  background: #f7f1e8;
+}
+
+.editor-program-canvas .canvas-panel-head {
+  margin-bottom: 14px;
+}
+
+.editor-program-canvas .grid-stage {
+  min-height: 0;
+  flex: 1;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.editor-program-canvas .grid {
+  max-height: 100%;
+}
+
+.editor-program-canvas .canvas-help {
+  margin-top: 12px;
+}
+
+.program-preview {
+  display: grid;
+  min-height: 245px;
+  place-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 18px;
+  border-radius: 20px;
+  background: var(--color-cream);
+}
+
+.program-preview .preview {
+  max-width: 220px;
+  max-height: 210px;
+  object-fit: contain;
+}
+
+.program-preview > span {
+  color: var(--color-text-muted);
+  font-size: 0.76rem;
+}
+
+.program-instructions {
+  padding-top: 22px;
+  border-top: 1px solid var(--color-border);
+}
+
+.program-instructions h3 {
+  margin-bottom: 14px;
+}
+
+.program-instructions ol {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.program-instructions li {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 8px;
+  font-size: 0.83rem;
+}
+
+.program-instructions li span {
+  font-weight: 800;
+}
+
+.program-instructions > p {
+  margin: 11px 0 0 50px;
+  color: var(--color-text-muted);
+  font-size: 0.76rem;
+}
+
+.program-start-button {
+  width: 100%;
+  margin-top: auto;
+}
+
 /* 따라 뜨기 */
 .knit-page {
   padding-bottom: 0;
@@ -1886,6 +2107,107 @@ progress::-webkit-progress-value {
 
   .knit-actions .btn-quiet {
     padding-inline: 12px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .editor-program-body {
+    grid-template-columns: 270px minmax(380px, 1fr) 270px;
+  }
+
+  .editor-program-controls,
+  .editor-program-summary {
+    padding: 22px 18px;
+  }
+
+  .editor-program-canvas {
+    padding-inline: 22px;
+  }
+}
+
+@media (max-width: 900px) {
+  .editor-program {
+    overflow: visible;
+  }
+
+  .editor-program-body {
+    display: flex;
+    height: auto;
+    min-height: 0;
+    flex-direction: column;
+  }
+
+  .editor-program-canvas {
+    order: 1;
+    min-height: 610px;
+  }
+
+  .editor-program-controls {
+    order: 2;
+    overflow: visible;
+    border-top: 1px solid var(--color-border);
+    border-right: 0;
+  }
+
+  .editor-program-summary {
+    order: 3;
+    overflow: visible;
+    border-top: 1px solid var(--color-border);
+    border-left: 0;
+  }
+
+  .program-start-button {
+    display: none;
+  }
+
+  .program-preview .preview {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 600px) {
+  .editor-page .site-header {
+    margin-bottom: 18px;
+  }
+
+  .editor-program {
+    margin-inline: -4px;
+    border-radius: 22px;
+  }
+
+  .editor-program-topbar {
+    min-height: 82px;
+    padding: 17px 18px;
+  }
+
+  .editor-program-topbar h1 {
+    font-size: 1.7rem;
+  }
+
+  .editor-program-topbar .save-state {
+    font-size: 0.72rem;
+  }
+
+  .editor-program-canvas {
+    min-height: 480px;
+    padding: 20px 14px 16px;
+  }
+
+  .editor-program-canvas .grid-stage {
+    padding: 8px;
+  }
+
+  .editor-program-controls,
+  .editor-program-summary {
+    padding: 22px 18px;
+  }
+
+  .program-section .swatch {
+    grid-template-columns: 36px 26px minmax(72px, 1fr) auto;
+  }
+
+  .program-preview {
+    min-height: 280px;
   }
 }
 

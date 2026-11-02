@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { GRID_MIN, GRID_MAX, MAX_COLORS, AI_MOOD_MAX } from '../config.js'
-import { finishedSize, resizeCells, resizeLosesPaint, removeColor } from '../lib/pattern.js'
+import { finishedSize, knitRows, resizeCells, resizeLosesPaint, removeColor, startText } from '../lib/pattern.js'
 import { askAI } from '../lib/ai.js'
 import Preview from '../components/Preview.jsx'
 import { SiteHeader } from '../components/Brand.jsx'
@@ -17,6 +17,7 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
   const painting = useRef(null) // 드래그 중: { cells: 최신 칸, last: 직전 칸 번호 }
   const current = Math.min(color, palette.length - 1)
   const cm = finishedSize(width, height, gauge)
+  const rows = knitRows(pattern)
   const hasProgress = pattern.doneRows.length > 0
 
   // 뜨는 중인 도안의 무늬를 바꾸면 체크한 단이 안 맞으므로 진행 기록 초기화 (PRD #9)
@@ -105,19 +106,139 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
         <button type="button" className="btn btn-sm" onClick={onBack}>← 내 작업실</button>
       </SiteHeader>
 
-      <header className="workbench-head">
-        <div>
-          <p className="eyebrow">DESIGN WORKSPACE</p>
-          <h1>{pattern.name}</h1>
-          <p className="save-state"><span aria-hidden="true" /> 브라우저에 자동 저장 중</p>
-        </div>
-        <button type="button" className="btn btn-primary btn-lg desktop-knit-button" onClick={onKnit}>
-          따라 뜨기 시작
-        </button>
-      </header>
+      <section className="editor-program">
+        <header className="editor-program-topbar">
+          <div>
+            <p className="eyebrow">DESIGN WORKSPACE</p>
+            <h1>{pattern.name}</h1>
+          </div>
+          <p className="save-state"><span aria-hidden="true" /> 자동 저장</p>
+        </header>
 
-      <div className="editor">
-        <section className="canvas-panel">
+        <div className="editor-program-body">
+          <aside className="editor-program-controls">
+            <div className="program-column-title">
+              <h2>디자인 옵션</h2>
+              <p>도안에 사용할 크기와 색을 정해요.</p>
+            </div>
+
+            <section className="program-section">
+              <div className="tool-heading">
+                <h3>배색</h3>
+                <span>{palette.length}/{MAX_COLORS}색</span>
+              </div>
+              <ul className="swatches">
+                {palette.map((c, i) => (
+                  <li key={i} className={i === current ? 'swatch selected' : 'swatch'}>
+                    <button
+                      type="button"
+                      className="swatch-pick"
+                      style={{ background: c.hex }}
+                      onClick={() => setColor(i)}
+                      aria-label={`${c.name}으로 칠하기`}
+                      aria-pressed={i === current}
+                    />
+                    <input
+                      type="color"
+                      value={c.hex}
+                      onChange={(e) => updateColor(i, { hex: e.target.value })}
+                      aria-label={`${c.name} 색 바꾸기`}
+                    />
+                    <input
+                      className="swatch-name"
+                      value={c.name}
+                      maxLength={20}
+                      onChange={(e) => updateColor(i, { name: e.target.value })}
+                      onBlur={(e) => !e.target.value.trim() && updateColor(i, { name: `색 ${i + 1}` })}
+                      aria-label="색 이름"
+                    />
+                    {i === 0 ? (
+                      <span className="muted">바탕</span>
+                    ) : (
+                      <button type="button" className="btn btn-sm" onClick={() => deleteColor(i)}>삭제</button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+              {palette.length < MAX_COLORS && (
+                <button type="button" className="btn btn-sm" onClick={addColor}>+ 색 추가</button>
+              )}
+              {palette.length === 1 && <p className="muted">색을 추가한 뒤 격자에 칠해 보세요.</p>}
+              {palette.length > BEGINNER_COLORS && <p className="muted">초보에게는 2~3색을 추천해요.</p>}
+            </section>
+
+            <form className="program-section" onSubmit={applySize}>
+              <div className="tool-heading"><h3>격자 크기</h3></div>
+              <div className="fields">
+                <label>
+                  가로(코)
+                  <input
+                    type="number"
+                    min={GRID_MIN}
+                    max={GRID_MAX}
+                    value={size.width}
+                    onChange={(e) => setSize({ ...size, width: e.target.value })}
+                  />
+                </label>
+                <label>
+                  세로(단)
+                  <input
+                    type="number"
+                    min={GRID_MIN}
+                    max={GRID_MAX}
+                    value={size.height}
+                    onChange={(e) => setSize({ ...size, height: e.target.value })}
+                  />
+                </label>
+              </div>
+              <button type="submit" className="btn btn-sm">크기 적용</button>
+            </form>
+
+            <section className="program-section">
+              <div className="tool-heading"><h3>게이지</h3><span>10cm 기준</span></div>
+              <div className="fields">
+                <label>
+                  코 수
+                  <input type="number" min="1" defaultValue={gauge.stitches} onChange={(e) => updateGauge('stitches', e.target.value)} />
+                </label>
+                <label>
+                  단 수
+                  <input type="number" min="1" defaultValue={gauge.rows} onChange={(e) => updateGauge('rows', e.target.value)} />
+                </label>
+              </div>
+            </section>
+
+            <form className="program-section program-ai" onSubmit={recommend}>
+              <div className="tool-heading">
+                <h3>AI 배색 추천</h3>
+                <span className="ai-label">AI</span>
+              </div>
+              <div className="ask">
+                <input
+                  className="text-input"
+                  value={mood}
+                  maxLength={AI_MOOD_MAX}
+                  placeholder="예: 봄 느낌으로"
+                  onChange={(e) => setMood(e.target.value)}
+                  aria-label="원하는 분위기"
+                />
+                <button type="submit" className="btn btn-primary btn-sm" disabled={ai.loading || !mood.trim()}>
+                  {ai.loading ? '추천 중…' : '추천'}
+                </button>
+              </div>
+              {ai.error && <p className="error" role="alert">{ai.error}</p>}
+              {ai.palettes.map((rec, i) => (
+                <button key={i} type="button" className="palette-pick" onClick={() => applyPalette(rec)}>
+                  <span className="palette-strip">
+                    {rec.colors.map((c, j) => <span key={j} style={{ background: c.hex }} />)}
+                  </span>
+                  <span><strong>{rec.name}</strong></span>
+                </button>
+              ))}
+            </form>
+          </aside>
+
+          <section className="editor-program-canvas">
           <div className="canvas-panel-head">
             <div>
               <h2>격자에 무늬 그리기</h2>
@@ -145,156 +266,42 @@ export default function Editor({ pattern, onChange, onBack, onKnit }) {
             </div>
           </div>
           <p className="canvas-help"><span aria-hidden="true">i</span> 맨 아래 줄이 1단이에요. 완성품은 아래에서 위로 떠 올라가요.</p>
-        </section>
+          </section>
 
-        <aside className="editor-side">
-          <div className="card preview-card">
-            <div className="tool-heading">
-              <h3>완성품 미리보기</h3>
-              <span>{cm.width} × {cm.height}cm</span>
+          <aside className="editor-program-summary">
+            <div className="program-column-title">
+              <h2>생성된 도안</h2>
+              <p>예상 크기 <strong>{cm.width} × {cm.height}cm</strong></p>
             </div>
-            <Preview pattern={pattern} />
-          </div>
 
-          <div className="card tool-card">
-            <div className="tool-heading">
-              <h3>배색</h3>
-              <span>{palette.length}/{MAX_COLORS}색</span>
+            <div className="program-preview">
+              <Preview pattern={pattern} />
+              <span>완성품 2D 미리보기</span>
             </div>
-            <ul className="swatches">
-              {palette.map((c, i) => (
-                <li key={i} className={i === current ? 'swatch selected' : 'swatch'}>
-                  <button
-                    type="button"
-                    className="swatch-pick"
-                    style={{ background: c.hex }}
-                    onClick={() => setColor(i)}
-                    aria-label={`${c.name}으로 칠하기`}
-                    aria-pressed={i === current}
-                  />
-                  <input
-                    type="color"
-                    value={c.hex}
-                    onChange={(e) => updateColor(i, { hex: e.target.value })}
-                    aria-label={`${c.name} 색 바꾸기`}
-                  />
-                  <input
-                    className="swatch-name"
-                    value={c.name}
-                    maxLength={20} // AI 서버가 1~20자 이름만 받음 (lib/ai.js)
-                    onChange={(e) => updateColor(i, { name: e.target.value })}
-                    onBlur={(e) => !e.target.value.trim() && updateColor(i, { name: `색 ${i + 1}` })}
-                    aria-label="색 이름"
-                  />
-                  {i === 0 ? (
-                    <span className="muted">바탕</span>
-                  ) : (
-                    <button type="button" className="btn btn-sm" onClick={() => deleteColor(i)}>
-                      삭제
-                    </button>
-                  )}
-                </li>
-              ))}
-            </ul>
-            {palette.length < MAX_COLORS && (
-              <button type="button" className="btn" onClick={addColor}>
-                색 추가
-              </button>
-            )}
-            {palette.length === 1 && <p className="muted">"색 추가"로 칠할 색을 넣어 주세요.</p>}
-            {palette.length > BEGINNER_COLORS && <p className="muted">초보에게는 2~3색을 추천해요.</p>}
-          </div>
 
-          <form className="card tool-card ai-palette-card" onSubmit={recommend}>
-            <div className="tool-heading">
-              <h3>AI 배색 추천</h3>
-              <span className="ai-label">AI</span>
+            <div className="program-instructions">
+              <h3>단별 설명 미리보기</h3>
+              <ol>
+                <li><span>시작</span>{startText(pattern.width).replace('시작: ', '')}</li>
+                {rows.slice(0, 3).map((row) => (
+                  <li key={row.row}>
+                    <span>{row.row}단</span>
+                    {row.runs.map((run) => `${run.name} ${run.count}코`).join(', ')}
+                  </li>
+                ))}
+              </ol>
+              {rows.length > 3 && <p>외 {rows.length - 3}단</p>}
             </div>
-            <div className="ask">
-              <input
-                className="text-input"
-                value={mood}
-                maxLength={AI_MOOD_MAX}
-                placeholder="예: 봄 느낌으로"
-                onChange={(e) => setMood(e.target.value)}
-                aria-label="원하는 분위기"
-              />
-              <button type="submit" className="btn btn-primary" disabled={ai.loading || !mood.trim()}>
-                {ai.loading ? '추천 중…' : '추천받기'}
-              </button>
-            </div>
-            <p className="muted">무늬는 그대로 두고 색 {palette.length}개만 바꿔요.</p>
-            {ai.error && (
-              <p className="error" role="alert">
-                {ai.error}
-              </p>
-            )}
-            {ai.palettes.map((rec, i) => (
-              <button key={i} type="button" className="palette-pick" onClick={() => applyPalette(rec)}>
-                <span className="palette-strip">
-                  {rec.colors.map((c, j) => (
-                    <span key={j} style={{ background: c.hex }} />
-                  ))}
-                </span>
-                <span>
-                  <strong>{rec.name}</strong>
-                  <span className="muted"> {rec.colors.map((c) => c.name).join(' · ')}</span>
-                </span>
-              </button>
-            ))}
-          </form>
 
-          <form className="card tool-card" onSubmit={applySize}>
-            <div className="tool-heading"><h3>격자 크기</h3></div>
-            <div className="fields">
-              <label>
-                가로(코)
-                <input
-                  type="number"
-                  min={GRID_MIN}
-                  max={GRID_MAX}
-                  value={size.width}
-                  onChange={(e) => setSize({ ...size, width: e.target.value })}
-                />
-              </label>
-              <label>
-                세로(단)
-                <input
-                  type="number"
-                  min={GRID_MIN}
-                  max={GRID_MAX}
-                  value={size.height}
-                  onChange={(e) => setSize({ ...size, height: e.target.value })}
-                />
-              </label>
-            </div>
-            <button type="submit" className="btn">
-              크기 바꾸기
+            <button type="button" className="btn btn-primary btn-lg program-start-button" onClick={onKnit}>
+              이 도안으로 따라 뜨기
             </button>
-          </form>
-
-          <div className="card tool-card">
-            <div className="tool-heading"><h3>게이지와 완성 크기</h3></div>
-            <div className="fields">
-              <label>
-                10cm당 코
-                <input type="number" min="1" defaultValue={gauge.stitches} onChange={(e) => updateGauge('stitches', e.target.value)} />
-              </label>
-              <label>
-                10cm당 단
-                <input type="number" min="1" defaultValue={gauge.rows} onChange={(e) => updateGauge('rows', e.target.value)} />
-              </label>
-            </div>
-            <p className="finished-size">
-              <span>예상 완성 크기</span>
-              <strong>{cm.width} × {cm.height}cm</strong>
-            </p>
-          </div>
-        </aside>
-      </div>
+          </aside>
+        </div>
+      </section>
 
       <div className="mobile-editor-action">
-        <button type="button" className="btn btn-primary btn-lg" onClick={onKnit}>따라 뜨기 시작</button>
+        <button type="button" className="btn btn-primary btn-lg" onClick={onKnit}>이 도안으로 따라 뜨기</button>
       </div>
     </main>
   )
