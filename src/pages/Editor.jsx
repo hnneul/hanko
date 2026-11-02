@@ -4,6 +4,7 @@ import { finishedSize, knitRows, resizeCells, resizeLosesPaint, removeColor, squ
 import { askAI } from '../lib/ai.js'
 import Preview from '../components/Preview.jsx'
 import { SiteHeader } from '../components/Brand.jsx'
+import ColorPicker from '../components/ColorPicker.jsx'
 
 const BEGINNER_COLORS = 3
 const RESET_PROGRESS = { doneRows: [], status: 'design' }
@@ -139,11 +140,10 @@ export default function Editor({ pattern, onChange, onBack, onHome, onKnit }) {
                       aria-label={`${c.name}으로 칠하기`}
                       aria-pressed={i === current}
                     />
-                    <input
-                      type="color"
-                      value={c.hex}
-                      onChange={(e) => updateColor(i, { hex: e.target.value })}
-                      aria-label={`${c.name} 색 바꾸기`}
+                    <ColorPicker
+                      color={c.hex}
+                      name={c.name}
+                      onChange={(hex) => updateColor(i, { hex })}
                     />
                     <input
                       className="swatch-name"
