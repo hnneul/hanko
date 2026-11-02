@@ -4,6 +4,7 @@
 
 - 사이트: https://hanko-red.vercel.app/
 - 인프 중간고사 바이브 코딩 과제: PRD와 Todo 리스트로 AI(Claude Code)와 함께 만든 프로젝트
+- 지난 실습 과제는 제출하지 않아서, 이어서 발전시킨 것이 아니라 새 앱을 새 저장소에서 처음부터 만들었다.
 
 ---
 
@@ -17,7 +18,7 @@
 
 ### 이렇게 써요
 
-1. **수준 고르기**: 처음 들어오면 "완전 초보" 또는 "기초는 앎"을 고른다. AI 도우미의 설명 깊이가 이 수준에 맞춰진다.
+1. **수준 고르기**: 처음 들어오면 "차근차근" 또는 "핵심만"을 고른다. AI 도우미의 설명 깊이가 이 선택에 맞춰진다.
 2. **새 도안 만들기**: 빈 격자 또는 무늬 템플릿(하트 사각 코스터 20×20칸, 산 태피스트리 벽걸이 30×40칸)에서 시작한다.
 3. **격자에 칠하기**: 색을 고르고 칸을 누르거나 드래그해서 칠한다. 완성품 미리보기와 완성 크기(cm)가 바로 바뀐다.
 4. **따라 뜨기**: "시작: 사슬 21코"와 단별 설명을 보며 한 단을 뜰 때마다 "N단 완료하기"를 누른다. 막히면 AI 도우미에게 묻는다.
@@ -113,9 +114,9 @@ npm test
 | 3단계 | 저장, 내 작업실, 수준 선택 | 3-1 ~ 3-8 | 완료 |
 | 4단계 | 단별 설명과 따라 뜨기 | 4-1 ~ 4-10 | 완료 |
 | 5단계 | AI 기능 | 5-1 ~ 5-10 | 완료 |
-| 6단계 | PRD 10번 완성 기준 점검 | 6-1 ~ 6-13 | 12개 통과, 6-13(실제로 떠 보기) 남음 |
+| 6단계 | PRD 10번 완성 기준 점검 | 6-1 ~ 6-13 | 완료(6-13은 노트북으로 실제로 떠 봄) |
 | 7단계 | 써 보니 불편한 점 고치기 | 7-1 ~ 7-6 | 완료(테스트 후 추가) |
-| 선택 | 유튜브 영상 해설 축소판 | 선택-1 | 완료(실제 영상 재생·이동은 아직 확인 못 함) |
+| 선택 | 유튜브 영상 해설 축소판 | 선택-1 | 완료 |
 
 ### 커밋 기록
 
@@ -130,7 +131,7 @@ npm test
 | 6단계 | `0a75361` | 완성 기준 점검 기록 |
 | 완성 후 | `cf9a1f7` `a11e77e` `a713da8` `6c44452` | 빈 격자 템플릿 추가, 전체 화면 디자인 개편, 코드 점검에서 나온 수정, 편집기 3단 화면 개편 |
 | 7단계 | `370b428` `cdc9e01` `7b97b93` `b148d38` `ab5b770` `aab68ca` | 바로 따라 뜨기, 새로고침 후 화면 유지, AI 배색 지시문, 정사각형 안내, AI 대화 저장, 기록 |
-| 선택 | `8eded7c` `597dea2` `f7c47de` | 영상 해설 축소판, 기록, 안내 팝업과 내 작업실 저장 |
+| 선택 | `8eded7c` `597dea2` `f7c47de` `40a55bd` `f01c9a0` | 영상 해설 축소판, 기록, 안내 팝업과 내 작업실 저장, README 반영, 빠진 입력 알림 |
 | 그 밖 | `319766a` | 헤더 로고를 누르면 내 작업실로 이동 |
 
 ---
@@ -161,7 +162,7 @@ npm test
 
 | 구분 | 번호 | 바꾼 것 | 이유 |
 |---|---|---|---|
-| 수정 | 전체 | 수업 템플릿 형식으로 다시 작성: 단계-순번 번호, PRD 번호, P1~P3, 확인 방법, 제외 목록 | 실습 때 쓴 형식이 진행 보고·확인에 편했음 |
+| 수정 | 전체 | 수업 템플릿 형식으로 다시 작성: 단계-순번 번호, PRD 번호, P1~P3, 확인 방법, 제외 목록 | 수업 템플릿 형식이 진행 보고·확인에 편했음(지난 다른 과제에서 써 봄) |
 | 추가 | 1-7 | 화면 용어 통일(PRD 6-1 "쓰는 말" 표) | 지난 과제 때 개발 중에 용어를 계속 바꿔서 PRD, Todo, 코드를 모두 고쳐야 했음 |
 | 추가 | 6-13 | 직접 코스터를 디자인하고 휴대폰으로 실제로 떠 보기 | 완성 기준을 다 통과해도 실제로 써 봐야 보이는 불편이 있었음 |
 | 수정 | 1-6 | 딸기우유 분홍 포인트 → 세이지 그린 메인 + 피치 포인트 | 색·글꼴·간격 규칙이 구체적으로 정리된 디자인 문서(DESIGN.md)를 따르기로 함 |
@@ -173,6 +174,8 @@ npm test
 | 추가 | 선택-1 | 유튜브 영상 해설 축소판: 자막 붙여넣기 → AI가 단계·시각 정리 → 누르면 그 시각부터 재생 (PRD 5번 문구도 수정) | 필요한 기능이라고 판단함. 링크만으로는 자막을 받을 수 없어 자막을 직접 붙여 넣는 축소판으로 |
 | 테스트 후 추가 | 선택-1 | 영상 화면에 들어오면 사용 방법과 지금 안 되는 것을 알려 주는 팝업, "다시 보지 않기" | 주소만 넣으면 되는 줄 알 수 있어서, 자막도 넣어야 한다는 걸 먼저 알려 주려고 |
 | 테스트 후 추가 | 선택-1 | 정리한 영상 단계를 내 작업실 "영상으로 배운 것"에 자동 저장, 다시 열기·삭제 | 영상으로 배운 걸 나중에 다시 보려면 자막을 또 붙여 넣어야 했음 |
+| 테스트 후 변경 | 1-7, 3-6 | 수준 이름 "완전 초보 / 기초는 앎" → "차근차근 / 핵심만" | 수준이 실제로 바꾸는 건 AI 도우미의 설명 방식뿐이라, 사람을 부르는 이름 대신 설명 방식으로 이름을 붙임 |
+| 테스트 후 변경 | 6-13 | "휴대폰으로" → "노트북(또는 휴대폰)으로" 떠 보기 | 실제로는 노트북 화면을 옆에 두고 떠 봄. 휴대폰 폭 화면은 6-10에서 375px로 이미 확인함 |
 
 ### 3-3. 테스트하며 발견해서 고친 것
 
@@ -193,20 +196,21 @@ npm test
 
 ### 3-4. 아직 하지 않은 것
 
-- **6-13 실제로 떠 보기**: 완성 기준 12개는 배포 주소에서 모두 통과했지만, 휴대폰으로 실제 코스터를 몇 단 떠 보는 확인은 아직 하지 않았다.
-- **선택-1 실제 영상으로 확인**: 미리보기 브라우저가 유튜브 영상을 불러오지 않아 실제 재생과 시각 이동은 보지 못했고, 실제 뜨개 영상의 자막으로도 아직 해 보지 않았다.
+- **휴대폰에서 화면 켜두기**: 6-13은 노트북으로 떠 봐서, 휴대폰에서 "화면 켜두기"(Wake Lock)가 실제로 켜지는지는 아직 확인하지 못했다.
 - 6단계에서 써 보며 찾은 불편한 점 5개는 7단계(7-1 ~ 7-5)에서 모두 고쳤다.
 
 ---
 
 ## 4. 스킬
 
-직접 만든 스킬은 없고, 이미 있는 스킬 2개를 썼다.
+직접 만든 스킬은 없고, 이미 있는 스킬 4개를 썼다. 기능 개발은 Claude Code, 디자인 개편은 Codex에서 했다.
 
 | 스킬 | 종류 | 언제 |
 |---|---|---|
 | ponytail | 플러그인 스킬(MIT 라이선스) | 코드를 쓴 모든 세션 |
 | claude-api | Claude Code 기본 스킬 | 5단계 전, AI 제공사를 고를 때 |
+| sites | Codex 플러그인 스킬(Sites) | 디자인 개편: 반응형 구성, 로컬 미리보기·검증 |
+| react-best-practices | Codex 플러그인 스킬(Vercel) | 디자인 개편 후 여러 컴포넌트의 접근성·구조·성능 점검 |
 
 ### 4-1. ponytail
 
@@ -369,6 +373,16 @@ The shortest path to done is the right path.
 3. 하지만 Claude API에는 무료 사용량이 없어서, 비용 없이 쓰려고 **Gemini API 무료 버전**(Flash-Lite)으로 바꿨다. 이 결정은 PRD 9번("처음 결정 → 바꾼 결정")과 Todo 변경 내역(5-1)에 남겼다.
 4. 이때 서버리스 함수 한 곳(`api/ai.js`)만 고치면 제공사를 바꿀 수 있게 만들기로 했다.
 
+스킬이 알려 준 요금(스킬의 모델 표, 2026-10-06 기준)과, 배색 추천 한 번을 입력 1,000토큰·출력 500토큰으로 잡고 계산한 비용이다. README를 정리하면서 같은 스킬로 다시 확인했다.
+
+| 모델 | 입력 (100만 토큰당) | 출력 (100만 토큰당) | 요청 1번 | 요청 1,000번 | JSON 형식 응답 |
+|---|---|---|---|---|---|
+| Claude Opus 5.5 | $4.00 | $20.00 | 약 $0.014 | 약 $14 | 지원(`output_config.format`) |
+| Claude Haiku 5.5 | $0.10 | $0.50 | 약 $0.00035 | 약 $0.35 | 지원 |
+| Gemini Flash-Lite 무료 버전 (최종 선택) | 무료 | 무료 | $0 | $0 (분당 15회 한도) | 지원 |
+
+Haiku도 아주 싸지만 결제 수단을 등록해야 하고, Gemini 무료 버전은 결제 없이 한도 안에서 쓸 수 있어서 과제에는 Gemini가 맞았다.
+
 <details>
 <summary>claude-api SKILL.md 설명 부분</summary>
 
@@ -379,6 +393,395 @@ Reference for the Claude API / Anthropic SDK — model ids, pricing, params, str
 TRIGGER — read BEFORE opening the target file; don't skip because it "looks like a one-liner" — whenever: the prompt names Claude/Anthropic in any form (Claude, Anthropic, Fable, Opus, Sonnet, Haiku, `anthropic`, `@anthropic-ai`, `claude-*`, `us.anthropic.*`, `[1m]`); the user asks about an LLM (pricing/model choice/limits/caching) — never answer from memory; OR the task is LLM-shaped with provider unstated (agent/MCP/tool-definition/multi-agent/RAG/LLM-judge/computer-use; generate/summarize/extract/classify/rewrite/converse over NL; debugging refusals/cutoffs/streaming/tool-calls/tokens).
 SKIP only when another provider is being worked on (overrides all triggers): OpenAI/GPT/Gemini/Llama/Mistral/Cohere/Ollama named in the query; OR `grep -rE 'openai|langchain_openai|google.generativeai|genai|mistralai|cohere|ollama'` over the project hits (run this grep FIRST if no provider named — don't Read the file).
 ```
+
+</details>
+
+### 4-3. sites
+
+**무엇을 하나요?** Codex의 Sites 플러그인 스킬이다. 웹사이트를 만들거나 고칠 때 "열기 → 준비 → 구현 → 검사 → 배포" 순서를 따르게 하고, 디자인 원칙(사용자의 주 작업 중심, 기존 브랜드 유지, 반응형, 읽기 쉬운 글자, 접근 가능한 상호작용)을 함께 준다.
+
+**고른 이유:** 기능을 다 만든 뒤 전체 화면 디자인을 개편해야 했다. 화면이 여러 개라 한 번에 고치면 휴대폰 폭에서 깨지기 쉬워서, 반응형 구성과 로컬 미리보기·검증 순서가 정해진 스킬을 골랐다.
+
+**작업에서 어떻게 쓰였나요?**
+
+- 전체 화면 디자인 개편(`a11e77e`: 브랜드 헤더, 흰 바탕, 설정 위치, 화면 전환)과 편집기 3단 화면 개편(`6c44452`: 옵션 / 격자 / 미리보기·단별 설명)에 썼다.
+- 스킬의 "로컬 전용" 흐름만 썼다. 배포는 이미 Vercel로 하고 있어서, Sites 호스팅 등록·게시 단계는 건너뛰었다.
+- 먼저 스킬의 디자인 원칙에 따라, 미리 정해 둔 디자인 방향("포근한 뜨개 작업실 + 깔끔한 편집 도구", 크림·세이지·피치)과 지금 화면을 비교해 화면별로 바꿀 점을 정리한 뒤 고쳤다.
+- 고친 화면을 로컬 미리보기로 띄워 375px 폭에서 수준 선택 → 내 작업실 → 템플릿 → 편집기 → 따라 뜨기 전체 흐름을 확인했다.
+- 이 미리보기 확인에서 새 화면이 비어 보이는 문제를 찾았다. 화면을 옮길 때 스크롤을 맨 위로 올리는 효과(`useEffect`)가 원인이어서 고쳤다(`src/App.jsx`).
+
+<details>
+<summary>sites SKILL.md 전문</summary>
+
+````markdown
+---
+name: sites
+description: Use Sites when the user wants a website built for them (including a landing page, portfolio, dashboard, portal, tracker, hub, game, event registration, or tool), requests changes to a website already built with Sites, wants to publish a website with Sites, or wants to manage Sites hosting.
+---
+
+# Sites
+
+Take the requested website through the supported development and publishing workflow. Publish completed new Sites and edits unless the user requests local-only work or saving without deployment. New Sites start private; preserve an existing Site's audience unless the user requests a change. Native tool approvals apply without an additional conversational publishing gate.
+
+For hosting-only changes, use the relevant native Sites tool and confirm its returned state; source preparation is needed only for source changes or publication.
+
+## Workflow
+
+`<plugin-root>` is the installed directory containing `scripts/` and `skills/`. Run helpers with absolute paths and literal arguments from the selected checkout. Keep credentials in session memory and pass them through stdin, never shell arguments, files, or output.
+
+### 1. Select and open
+
+Default to a new Site unless a specific existing Site is identified.
+
+- **Existing hosted Site:** retain its `project_id` and audience, call `get_site` and `create_source_repository_write_credential`, and open with the [source helper](#source-helper) before editing. Omit `archivePath`; use an empty directory when source is missing, then the returned `checkout_path`.
+- **New Site:** create a unique, new empty project subdirectory in the task's workspace, normally `/workspace/sites/<slug>` in managed Linux. Default simple pages and browser-local interactions to buildless HTML/JS; use the supplied Vinext starter for server behavior. Preserve retained templates.
+- **Local-only:** use the available checkout; skip registration, source synchronization, and publication.
+
+### 2. Prepare and launch
+
+For new Vinext projects, run:
+
+```text
+node <plugin-root>/scripts/project-setup.mjs
+```
+
+This copies the starter and configures ignored checkout-local state. Helpers select `managed-linux` only for `SITES_MANAGED_LINUX_CONTAINER=1`, otherwise `portable`. For buildless HTML/JS, prepare `dist/` for `index.html` and assets; skip starter setup, installation, and build.
+
+For a retained template, add `--template-source <absolute-sanitized-source-directory>`; exclude Site identity, Git metadata, credentials, and runtime data. For explicitly requested Worker ESM, add `--starter worker-esm` and follow [its README](templates/worker-esm-starter/README.md). Use [Troubleshooting](references/troubleshooting.md#project-configuration) for profile repair or static-to-Worker migration.
+
+After minimal setup, launch registration for new hosted work in a retained execution cell when available. Native `create_site` creates a private, unpublished Site and returns its ID and source credential. Immediately persist the ID when it returns. For static Sites, include `--static-directory` when known to set both fields at once; omit it for Worker builds. For buildless HTML/JS, run:
+
+```text
+node <plugin-root>/scripts/set-project-id.mjs --project-id <returned-id> --static-directory dist
+```
+
+Reuse an existing ID or registration attempt; resolve uncertain creation before retrying. For app integrations, first read [discovery and declarations](references/app-integrations.md#discover-and-declare).
+
+Start needed dependency installation before feature implementation:
+
+```text
+node <plugin-root>/scripts/install-dependencies.mjs
+```
+
+Run only when dependencies are missing or their inputs changed. The installer handles host settings, package-manager selection, and interrupted setup; it takes no flags. Use one installer; keep dependency inputs unchanged while it runs. Proceed to implementation once the applicable operations are launched.
+
+For managed-image pnpm additions, use `node "$SITES_PNPM_BIN" add <package>`.
+
+Start required image search or generation when its brief is clear, alongside independent source work. Consider a parallel subagent for image downloads. Delegate bounded asset or research tasks; the Site owner handles the checkout, native Sites calls in the owning conversation, and publication.
+
+### 3. Implement
+
+Write application files while setup runs. For hosted work, await persisted Site identity before further manifest edits or source synchronization. Await installed dependencies before commands that need them.
+
+Implement the requested experience in one focused pass; revise for observed failures or unmet requirements. Replace starter title and description and remove temporary `codex-preview` metadata during implementation. Integrate required assets and complete the requested behavior before publishing.
+
+When `SITES_MANAGED_LINUX_CONTAINER=1`, preview is internal QA. Start it only when the task needs browser QA and `cua_repl.js` is available. If `cua_repl.js` is unavailable, skip browser QA: do not start a preview server, install a browser, or improvise another browser-control path.
+
+When `SITES_MANAGED_LINUX_CONTAINER` is not `1`, use local preview. In visible tasks with user-facing preview support, show the first recognizable version once it serves successfully and keep it current. Background tasks skip user-facing handoff.
+
+Before any preview, browser test, or screenshot, read the selected reference: [managed](references/preview/managed.md) or [local](references/preview/local.md). If preview infrastructure is unavailable, report the verification limit and continue appropriate checks and publication unless passing browser QA is required. Follow [Troubleshooting](references/troubleshooting.md#preview) after failures.
+
+### 4. Validate and package
+
+Collect any remaining registration and installation results, then finalize the source manifest before checks/builds and packaging.
+
+#### Hosting manifest
+
+The tracked `.openai/hosting.json` declares Site identity and deployment configuration. After registration, a minimal static Site uses:
+
+```json
+{
+  "project_id": "<returned-id>",
+  "static": {"directory": "dist"}
+}
+```
+
+| Field | Contract |
+| --- | --- |
+| `project_id` | Persist with `set-project-id.mjs` on creation; preserve on updates. |
+| `static` | Object with `directory`: `dist`, `dist/client`, `out`, `build`, or `.output/public`. Omit for Worker builds. |
+| `d1`, `r2` | [Storage bindings](references/storage.md#bindings); leave unused bindings `null`. |
+| `capabilities` | Declare [a Site MCP server](references/site-mcp-server.md#build-the-server) when needed. |
+| `plugins`, `connectors` | [App integration declarations](references/app-integrations.md#discover-and-declare). |
+
+Preserve existing fields. Edit the source manifest; build helpers emit Worker deployment metadata.
+
+Run checks appropriate to the change; lint only when requested. For hosted work, package with the source helper using remaining checks/builds as ordered argument arrays and an absolute `archivePath`. Pass the complete prior opening result as `source` when available.
+
+Buildless HTML/JS uses `commands: []` when no checks remain. Framework projects, including Vinext and static exports, build with `["node", "<plugin-root>/scripts/build-site.mjs"]`. Omit commands already completed successfully with unchanged inputs. Local-only work runs checks/builds directly and skips packaging for publication.
+
+#### Source helper
+
+Use the repository access from registration or `create_source_repository_write_credential` for the same Site. If `auth_mode` is `work_proxy`, it contains no token. Use the same helper or ordinary Git with `remote_url`; Work supplies authentication outside the executor. If Git reports expired access, call `create_source_repository_write_credential` again. Do not configure a token or authentication header for this mode.
+
+```text
+node <plugin-root>/scripts/site-workflow.mjs --project-id <project_id>
+```
+
+Launch with `exec_command(tty: true, yield_time_ms: 1000)`. After `Ready for Site workflow JSON on stdin (input is hidden).`, send one newline-terminated JSON object with `write_stdin`. Wait for successful exit and retain the final JSON result.
+
+| Input | Value |
+| --- | --- |
+| `credential` | Returned credential object, through stdin only. |
+| `source` | Complete prior opening result, when available. |
+| `commands` | Remaining checks/builds as ordered argument arrays; packaging only. |
+| `archivePath` | Absolute output archive path for packaging; omit for opening. |
+
+The helper owns Git preparation, ordered commands, commit/push, and packaging. Pass its verified `project_id`, `commit_sha`, and `archive` directly to publishing; keep the archive unchanged until saving succeeds.
+
+### 5. Publish
+
+Use the audience from creation or `get_site`; refresh unknown or changed ownership/access before selecting a tool.
+
+| Audience | Native calls |
+| --- | --- |
+| Confirmed owner-private | `save_version_and_deploy_private`; if unavailable, `save_site_version` then `deploy_private_site_version`. |
+| Other supported audiences | `save_site_version` then `deploy_site_version`. |
+
+Save-only uses `save_site_version` without deployment. A matching archive-backed saved version needs only deployment; source-only versions still need their matching archive. Preserve returned version IDs, including `saved_version_id`, when resuming. Continue an existing deployment rather than starting another.
+
+### 6. Finish
+
+Poll `get_deployment_status` only for `pending`, `building`, or `publishing`; stop on a terminal result. A successful native result with its URL verifies deployment without another status call or browser visit.
+
+Return the literal deployed URL, saved version for save-only work, or local result. In visible tasks, open the deployed URL in the existing Site tab with `open_in_codex` or equivalent when supported; background tasks skip browser handoff. Handoff failure does not invalidate a verified deployment. Report incomplete verification or blockers; read [Troubleshooting](references/troubleshooting.md) after a failure or incomplete result.
+
+## Design
+
+Build around the user's primary task. Choose a coherent visual direction suited to the subject and audience, and preserve established branding when editing. Keep layouts responsive, text readable, and interactions accessible. Use imagery when it contributes to the experience.
+
+Keep functionality within the requested scope. For open-ended presentation-led briefs, develop content and structure as needed for a complete experience. Preserve explicit content constraints and keep bounded edits bounded.
+
+Read applicable guidance before choosing content and structure. Select by the experience's purpose, not merely its visual subject.
+
+| Design guidance | When to use it |
+| --- | --- |
+| [Presentation-led sites](references/design/presentation-led.md) | New websites primarily meant to introduce, explain, persuade, or showcase: landing pages, marketing sites, portfolios, and interactive presentation sites. |
+
+## Capabilities
+
+Choose capabilities from the requested behavior and preserve those an existing Site uses. This is a reference index, not a checklist of features to add. Read only the relevant pages.
+
+| Capability | When to use it |
+| --- | --- |
+| [Data and files](references/storage.md) | Durable records in D1 and uploads or generated files in R2. |
+| [Identity and access](references/identity-and-secrets.md) | ChatGPT sign-in, user-owned data, runtime secrets, and private service access. |
+| [App integrations](references/app-integrations.md) | Let the Site read data and perform actions in apps visitors have connected to ChatGPT. |
+| [Site MCP server](references/site-mcp-server.md) | Expose the Site's operations as tools agents can call. |
+| [Browser agent support (WebMCP)](references/browser-agent-support.md) | Optionally make the page's actions easier for browser agents to use. |
+| [Scheduled updates](references/recurring-updates.md) | Update a published Site while it is closed, using an unattended data path and a linked automation. |
+
+Hosted server code runs in Cloudflare Workers, with 128 MB per isolate and HTTP-based external connections; raw TCP is unavailable. Preserve the starter's `sites()` build integration. Capability references specify any required manifest declarations; not every feature is a `capabilities` entry.
+````
+
+</details>
+
+### 4-4. react-best-practices
+
+**무엇을 하나요?** Vercel 플러그인의 React 점검 스킬이다. 여러 React 컴포넌트를 고친 뒤 컴포넌트 구조, 훅 사용, 접근성, 성능을 체크리스트로 점검하게 한다. 규칙 64개가 8개 분야로 나뉘어 있고 영향이 큰 순서로 우선순위가 붙어 있다.
+
+**고른 이유:** 디자인 개편 때 여러 컴포넌트(`Brand.jsx`, `Helper.jsx`, `Preview.jsx`와 각 화면)를 한꺼번에 고쳤다. 모양만 바꾸다 접근성이나 구조가 망가지지 않았는지 따로 확인하고 싶어서 골랐다.
+
+**작업에서 어떻게 쓰였나요?**
+
+- 디자인 개편에서 화면 5개(`Level`, `Home`, `Templates`, `Editor`, `Knit`)와 `Brand` 컴포넌트를 한꺼번에 고친 뒤, 마무리 단계에서 이 스킬로 점검했다.
+- 모양을 바꾸면서 키보드 포커스 표시와 손가락으로 누르기 충분한 버튼 크기 같은 접근성이 그대로 유지되는지 확인했다. 기능과 저장 데이터는 건드리지 않았다.
+- 점검 뒤 테스트 19개, 빌드, 린트가 모두 통과했고, 새 브라우저 세션에서 콘솔 오류가 없었다.
+- 한코한코는 Next.js나 서버 컴포넌트를 쓰지 않는 Vite + React 앱이라, 서버 성능·데이터 가져오기 규칙은 해당하지 않았다. 다시 그리기(re-render), 렌더링, 일반 자바스크립트 규칙만 해당됐다.
+
+<details>
+<summary>react-best-practices SKILL.md 전문</summary>
+
+````markdown
+---
+name: react-best-practices
+description: React best-practices reviewer for TSX files. Triggers after editing multiple TSX components to run a condensed quality checklist covering component structure, hooks usage, accessibility, performance, and TypeScript patterns.
+metadata:
+  priority: 4
+  docs:
+    - "https://react.dev/reference/react"
+    - "https://react.dev/learn"
+  pathPatterns:
+    - 'src/components/**/*.tsx'
+    - 'src/components/**/*.jsx'
+    - 'app/components/**/*.tsx'
+    - 'app/components/**/*.jsx'
+    - 'components/**/*.tsx'
+    - 'components/**/*.jsx'
+    - 'src/ui/**/*.tsx'
+    - 'lib/components/**/*.tsx'
+  bashPatterns: []
+  importPatterns:
+    - 'react'
+    - 'react-dom'
+validate:
+  -
+    pattern: 'from\s+[''"](styled-components|@emotion/styled|@emotion/react|@mui/material|@chakra-ui/react)[''"]|styled\.'
+    message: 'Legacy CSS-in-JS or component library detected. Consider shadcn/ui + Tailwind for modern Vercel-native UI.'
+    severity: warn
+    upgradeToSkill: shadcn
+    upgradeWhy: 'Migrate from CSS-in-JS/MUI/Chakra to shadcn/ui + Tailwind CSS for better SSR performance and Vercel ecosystem alignment.'
+    skipIfFileContains: '@/components/ui|shadcn|tailwindcss'
+retrieval:
+  aliases:
+    - react review
+    - component quality
+    - tsx linter
+    - react patterns
+  intents:
+    - review react code
+    - improve component quality
+    - check accessibility
+    - optimize react
+  entities:
+    - hooks
+    - accessibility
+    - React
+    - TSX
+    - component
+chainTo:
+  -
+    pattern: 'from\s+[''\"](styled-components|@emotion/styled|@emotion/react|@mui/material|@chakra-ui/react)[''"]|styled\.'
+    targetSkill: shadcn
+    message: 'Legacy CSS-in-JS or component library detected — loading shadcn/ui guidance for modern Vercel-native UI.'
+
+---
+
+# Vercel React Best Practices
+
+Comprehensive performance optimization guide for React and Next.js applications, maintained by Vercel. Contains 64 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
+
+## When to Apply
+
+Reference these guidelines when:
+- Writing new React components or Next.js pages
+- Implementing data fetching (client or server-side)
+- Reviewing code for performance issues
+- Refactoring existing React/Next.js code
+- Optimizing bundle size or load times
+
+## Rule Categories by Priority
+
+| Priority | Category | Impact | Prefix |
+|----------|----------|--------|--------|
+| 1 | Eliminating Waterfalls | CRITICAL | `async-` |
+| 2 | Bundle Size Optimization | CRITICAL | `bundle-` |
+| 3 | Server-Side Performance | HIGH | `server-` |
+| 4 | Client-Side Data Fetching | MEDIUM-HIGH | `client-` |
+| 5 | Re-render Optimization | MEDIUM | `rerender-` |
+| 6 | Rendering Performance | MEDIUM | `rendering-` |
+| 7 | JavaScript Performance | LOW-MEDIUM | `js-` |
+| 8 | Advanced Patterns | LOW | `advanced-` |
+
+## Quick Reference
+
+### 1. Eliminating Waterfalls (CRITICAL)
+
+- `async-defer-await` - Move await into branches where actually used
+- `async-parallel` - Use Promise.all() for independent operations
+- `async-dependencies` - Use better-all for partial dependencies
+- `async-api-routes` - Start promises early, await late in API routes
+- `async-suspense-boundaries` - Use Suspense to stream content
+
+### 2. Bundle Size Optimization (CRITICAL)
+
+- `bundle-barrel-imports` - Import directly, avoid barrel files
+- `bundle-dynamic-imports` - Use next/dynamic for heavy components
+- `bundle-defer-third-party` - Load analytics/logging after hydration
+- `bundle-conditional` - Load modules only when feature is activated
+- `bundle-preload` - Preload on hover/focus for perceived speed
+
+### 3. Server-Side Performance (HIGH)
+
+- `server-auth-actions` - Authenticate server actions like API routes
+- `server-cache-react` - Use React.cache() for per-request deduplication
+- `server-cache-lru` - Use LRU cache for cross-request caching
+- `server-dedup-props` - Avoid duplicate serialization in RSC props
+- `server-hoist-static-io` - Hoist static I/O (fonts, logos) to module level
+- `server-serialization` - Minimize data passed to client components
+- `server-parallel-fetching` - Restructure components to parallelize fetches
+- `server-after-nonblocking` - Use after() for non-blocking operations
+
+### 4. Client-Side Data Fetching (MEDIUM-HIGH)
+
+- `client-swr-dedup` - Use SWR for automatic request deduplication
+- `client-event-listeners` - Deduplicate global event listeners
+- `client-passive-event-listeners` - Use passive listeners for scroll
+- `client-localstorage-schema` - Version and minimize localStorage data
+
+### 5. Re-render Optimization (MEDIUM)
+
+- `rerender-defer-reads` - Don't subscribe to state only used in callbacks
+- `rerender-memo` - Extract expensive work into memoized components
+- `rerender-memo-with-default-value` - Hoist default non-primitive props
+- `rerender-dependencies` - Use primitive dependencies in effects
+- `rerender-derived-state` - Subscribe to derived booleans, not raw values
+- `rerender-derived-state-no-effect` - Derive state during render, not effects
+- `rerender-functional-setstate` - Use functional setState for stable callbacks
+- `rerender-lazy-state-init` - Pass function to useState for expensive values
+- `rerender-simple-expression-in-memo` - Avoid memo for simple primitives
+- `rerender-split-combined-hooks` - Split hooks with independent dependencies
+- `rerender-move-effect-to-event` - Put interaction logic in event handlers
+- `rerender-transitions` - Use startTransition for non-urgent updates
+- `rerender-use-deferred-value` - Defer expensive renders to keep input responsive
+- `rerender-use-ref-transient-values` - Use refs for transient frequent values
+- `rerender-no-inline-components` - Don't define components inside components
+
+### 6. Rendering Performance (MEDIUM)
+
+- `rendering-animate-svg-wrapper` - Animate div wrapper, not SVG element
+- `rendering-content-visibility` - Use content-visibility for long lists
+- `rendering-hoist-jsx` - Extract static JSX outside components
+- `rendering-svg-precision` - Reduce SVG coordinate precision
+- `rendering-hydration-no-flicker` - Use inline script for client-only data
+- `rendering-hydration-suppress-warning` - Suppress expected mismatches
+- `rendering-activity` - Use Activity component for show/hide
+- `rendering-conditional-render` - Use ternary, not && for conditionals
+- `rendering-usetransition-loading` - Prefer useTransition for loading state
+- `rendering-resource-hints` - Use React DOM resource hints for preloading
+- `rendering-script-defer-async` - Use defer or async on script tags
+
+### 7. JavaScript Performance (LOW-MEDIUM)
+
+- `js-batch-dom-css` - Group CSS changes via classes or cssText
+- `js-index-maps` - Build Map for repeated lookups
+- `js-cache-property-access` - Cache object properties in loops
+- `js-cache-function-results` - Cache function results in module-level Map
+- `js-cache-storage` - Cache localStorage/sessionStorage reads
+- `js-combine-iterations` - Combine multiple filter/map into one loop
+- `js-length-check-first` - Check array length before expensive comparison
+- `js-early-exit` - Return early from functions
+- `js-hoist-regexp` - Hoist RegExp creation outside loops
+- `js-min-max-loop` - Use loop for min/max instead of sort
+- `js-set-map-lookups` - Use Set/Map for O(1) lookups
+- `js-tosorted-immutable` - Use toSorted() for immutability
+- `js-flatmap-filter` - Use flatMap to map and filter in one pass
+
+### 8. Advanced Patterns (LOW)
+
+- `advanced-event-handler-refs` - Store event handlers in refs
+- `advanced-init-once` - Initialize app once per app load
+- `advanced-use-latest` - useLatest for stable callback refs
+
+## How to Use
+
+Read individual rule files for detailed explanations and code examples:
+
+```
+rules/async-parallel.md
+rules/bundle-barrel-imports.md
+```
+
+Each rule file contains:
+- Brief explanation of why it matters
+- Incorrect code example with explanation
+- Correct code example with explanation
+- Additional context and references
+
+## Full Compiled Document
+
+For the complete guide with all rules expanded: `AGENTS.md`
+````
 
 </details>
 

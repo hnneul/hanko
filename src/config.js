@@ -15,8 +15,8 @@ export const GRID_MAX = 60
 
 // 사용자 수준 (PRD #4-1)
 export const LEVELS = [
-  { id: 'beginner', name: '완전 초보', desc: '코바늘을 처음 잡아요. 차근차근 설명해 주세요.' },
-  { id: 'basic', name: '기초는 앎', desc: '사슬뜨기·짧은뜨기는 할 줄 알아요.' },
+  { id: 'beginner', name: '차근차근', desc: '코바늘을 처음 잡아요. 손동작부터 하나씩 알려 주세요.' },
+  { id: 'basic', name: '핵심만', desc: '사슬뜨기·짧은뜨기는 할 줄 알아요.' },
 ]
 
 // AI (PRD #4-3, #4-5, #7). 지시문은 서버(api/ai.js)가 이 값으로 만들고, 화면은 정해진 값만 보냄
