@@ -31,6 +31,27 @@ function App() {
   // 새로고침해도 보던 화면으로 (todo 7-2)
   useEffect(() => saveView({ page, openId, knitFrom }), [page, openId, knitFrom])
 
+  // 브라우저·휴대폰 뒤로가기: 화면이 바뀌면 기록을 쌓고, 뒤로 가면 그 화면으로 (todo 7-7)
+  // 같은 화면에서 openId만 바뀌면(저장) 기록을 덮어씀
+  useEffect(() => {
+    const view = { page, openId, knitFrom }
+    const cur = history.state
+    if (cur?.page === page && cur.openId === openId && cur.knitFrom === knitFrom) return
+    if (!cur || cur.page === page) history.replaceState(view, '')
+    else history.pushState(view, '')
+  }, [page, openId, knitFrom])
+
+  useEffect(() => {
+    function onPop(e) {
+      const v = e.state ?? { page: 'home', openId: null, knitFrom: 'home' }
+      setPage(v.page)
+      setOpenId(v.openId)
+      setKnitFrom(v.knitFrom)
+    }
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
+
   // 화면을 바꾸면 이전 화면의 스크롤 위치를 이어받지 않도록 맨 위에서 시작
   // (영상 정리를 저장하며 openId만 바뀔 때는 그대로)
   useEffect(() => {
