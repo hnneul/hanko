@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { LEVELS } from '../config.js'
 import { progress } from '../lib/pattern.js'
 import { guideTotal } from '../lib/ai.js'
@@ -10,18 +11,38 @@ const STATUS_NAMES = { design: '디자인 중', knitting: '뜨는 중', done: '�
 export default function Home({ patterns, videos, guides, level, onNew, onVideo, onDeleteVideo, onGuide, onRenameGuide, onDeleteGuide, onOpen, onKnit, onRename, onDelete, onLevel }) {
   const sorted = [...patterns].sort((a, b) => b.updatedAt - a.updatedAt)
 
-  function rename(p) {
-    const name = prompt('새 도안 이름', p.name)?.trim()
-    if (name) onRename(p.id, name)
-  }
+  // 브라우저 팝업(prompt·confirm) 대신 카드 안에서 이름 바꾸고, 삭제는 사이트 팝업으로 확인
+  const [renaming, setRenaming] = useState(null) // { id, value }
+  const [deleting, setDeleting] = useState(null) // { text, run }
+  const dialog = useRef(null)
 
-  function renameGuide(g) {
-    const title = prompt('새 도안 이름', g.title)?.trim()
-    if (title) onRenameGuide(g.id, title)
-  }
+  // 닫아도 deleting은 그대로 둠(닫는 이벤트가 늦게 와도 문구가 비지 않게). 새로 누를 때마다 새 객체라 다시 열림
+  useEffect(() => {
+    if (deleting) dialog.current.showModal()
+  }, [deleting])
 
-  function remove(p) {
-    if (confirm(`'${p.name}' 도안을 삭제할까요? 삭제하면 되돌릴 수 없어요.`)) onDelete(p.id)
+  function renameForm(onSave) {
+    function save(e) {
+      e.preventDefault()
+      const name = renaming.value.trim()
+      if (name) onSave(renaming.id, name)
+      setRenaming(null)
+    }
+    return (
+      <form className="rename-form" onSubmit={save}>
+        <input
+          className="text-input"
+          value={renaming.value}
+          maxLength={30}
+          autoFocus
+          aria-label="새 도안 이름"
+          onChange={(e) => setRenaming({ ...renaming, value: e.target.value })}
+          onKeyDown={(e) => e.key === 'Escape' && setRenaming(null)}
+        />
+        <button type="submit" className="btn btn-sm btn-primary">저장</button>
+        <button type="button" className="btn btn-sm btn-quiet" onClick={() => setRenaming(null)}>취소</button>
+      </form>
+    )
   }
 
   return (
@@ -47,6 +68,15 @@ export default function Home({ patterns, videos, guides, level, onNew, onVideo, 
           </div>
         </details>
       </SiteHeader>
+
+      <dialog ref={dialog} className="card video-guide confirm-pop" aria-labelledby="delete-title">
+        <h2 id="delete-title">{deleting?.text}</h2>
+        <p>삭제하면 되돌릴 수 없어요.</p>
+        <form method="dialog" className="video-guide-actions">
+          <button type="submit" className="btn btn-primary" onClick={() => deleting.run()}>삭제</button>
+          <button type="submit" className="btn btn-quiet">취소</button>
+        </form>
+      </dialog>
 
       <section className="workspace-hero">
         <div>
@@ -104,13 +134,23 @@ export default function Home({ patterns, videos, guides, level, onNew, onVideo, 
                   </span>
                 </button>
                 <div className="pattern-actions">
-                  {p.status !== 'done' && (
-                    <button type="button" className="btn btn-sm btn-primary" onClick={() => onKnit(p.id)}>
-                      {p.status === 'knitting' ? '이어서 뜨기' : '따라 뜨기'}
-                    </button>
+                  {renaming?.id === p.id ? renameForm(onRename) : (
+                    <>
+                      {p.status !== 'done' && (
+                        <button type="button" className="btn btn-sm btn-primary" onClick={() => onKnit(p.id)}>
+                          {p.status === 'knitting' ? '이어서 뜨기' : '따라 뜨기'}
+                        </button>
+                      )}
+                      <button type="button" className="btn btn-sm" onClick={() => setRenaming({ id: p.id, value: p.name })}>이름 바꾸기</button>
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-quiet"
+                        onClick={() => setDeleting({ text: `'${p.name}' 도안을 삭제할까요?`, run: () => onDelete(p.id) })}
+                      >
+                        삭제
+                      </button>
+                    </>
                   )}
-                  <button type="button" className="btn btn-sm" onClick={() => rename(p)}>이름 바꾸기</button>
-                  <button type="button" className="btn btn-sm btn-quiet" onClick={() => remove(p)}>삭제</button>
                 </div>
               </li>
             ))}
@@ -140,14 +180,18 @@ export default function Home({ patterns, videos, guides, level, onNew, onVideo, 
                     </span>
                   </button>
                   <div className="pattern-actions">
-                    <button type="button" className="btn btn-sm" onClick={() => renameGuide(g)}>이름 바꾸기</button>
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-quiet"
-                      onClick={() => confirm(`'${g.title}' 풀이를 삭제할까요?`) && onDeleteGuide(g.id)}
-                    >
-                      삭제
-                    </button>
+                    {renaming?.id === g.id ? renameForm(onRenameGuide) : (
+                      <>
+                        <button type="button" className="btn btn-sm" onClick={() => setRenaming({ id: g.id, value: g.title })}>이름 바꾸기</button>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-quiet"
+                          onClick={() => setDeleting({ text: `'${g.title}' 풀이를 삭제할까요?`, run: () => onDeleteGuide(g.id) })}
+                        >
+                          삭제
+                        </button>
+                      </>
+                    )}
                   </div>
                 </li>
               )
@@ -181,7 +225,7 @@ export default function Home({ patterns, videos, guides, level, onNew, onVideo, 
                   <button
                     type="button"
                     className="btn btn-sm btn-quiet"
-                    onClick={() => confirm(`'${v.title}' 정리를 삭제할까요?`) && onDeleteVideo(v.id)}
+                    onClick={() => setDeleting({ text: `'${v.title}' 정리를 삭제할까요?`, run: () => onDeleteVideo(v.id) })}
                   >
                     삭제
                   </button>

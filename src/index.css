@@ -2128,6 +2128,26 @@ progress::-webkit-progress-value {
   margin: 0;
 }
 
+/* 삭제 확인 팝업: 짧은 문구라 작게 */
+.confirm-pop {
+  width: min(400px, calc(100vw - 32px));
+}
+
+.confirm-pop h2 {
+  font-size: 1.125rem;
+}
+
+.confirm-pop p {
+  color: var(--color-text-muted);
+}
+
+.rename-form {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+}
+
+.rename-form .text-input,
 .guide-title .text-input {
   flex: 1;
   min-width: 0;
