@@ -4,10 +4,11 @@ import Level from './pages/Level.jsx'
 import Templates from './pages/Templates.jsx'
 import Editor from './pages/Editor.jsx'
 import Knit from './pages/Knit.jsx'
+import Video from './pages/Video.jsx'
 import { createPattern } from './lib/pattern.js'
 import { loadPatterns, savePatterns, loadLevel, saveLevel, loadView, saveView, removeChat } from './lib/storage.js'
 
-// 화면: 'home' → 'templates' → 'editor' → 'knit'
+// 화면: 'home' → 'templates' → 'editor' → 'knit', 'home' → 'video'(영상 해설)
 // 수준을 아직 안 골랐으면 어느 화면이든 수준 선택부터 (PRD #4-1)
 const saved = loadView()
 
@@ -56,6 +57,9 @@ function App() {
       />
     )
   }
+  if (page === 'video') {
+    return <Video onBack={() => setPage('home')} onHome={() => setPage('home')} />
+  }
   if (page === 'editor' && pattern) {
     return (
       <Editor
@@ -87,6 +91,7 @@ function App() {
       patterns={patterns}
       level={level}
       onNew={() => setPage('templates')}
+      onVideo={() => setPage('video')}
       onOpen={(id) => {
         setOpenId(id)
         setPage('editor')

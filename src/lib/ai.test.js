@@ -1,7 +1,7 @@
 // 실행: npm test
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { buildRequest, parsePalettes, cleanAnswer } from './ai.js'
+import { buildRequest, parsePalettes, parseSteps, toSeconds, youtubeId, cleanAnswer } from './ai.js'
 
 const help = {
   type: 'help',
@@ -53,4 +53,31 @@ test('도우미 답: 별표 빼고 길이 제한', () => {
   assert.equal(cleanAnswer('**짧은뜨기**는요'), '짧은뜨기는요')
   assert.equal(cleanAnswer('가'.repeat(700)).length, 601)
   assert.equal(cleanAnswer(''), null)
+})
+
+test('영상 해설 요청: 타임스탬프 있는 자막만, 10000자까지 (선택-1)', () => {
+  const r = buildRequest({ type: 'video', subtitles: '0:05 안녕하세요\n0:12 사슬 21코를 떠요' })
+  assert.match(r.prompt, /사슬 21코/)
+  assert.ok(r.schema)
+  assert.equal(buildRequest({ type: 'video', subtitles: '타임스탬프 없는 자막' }), null)
+  assert.equal(buildRequest({ type: 'video', subtitles: `0:05 ${'가'.repeat(10000)}` }), null)
+})
+
+test('영상 해설 답: 시각을 초로, 형식이 틀리면 null (선택-1)', () => {
+  const step = (time = '1:05') => ({ time, title: '사슬뜨기', desc: '사슬 21코를 떠요.' })
+  assert.deepEqual(parseSteps(JSON.stringify({ steps: [step(), step('1:02:03')] })).map((s) => s.time), [65, 3723])
+  assert.deepEqual(parseSteps('{"steps": []}'), [])
+  assert.equal(parseSteps(JSON.stringify({ steps: [step('1분 5초')] })), null)
+  assert.equal(parseSteps(JSON.stringify({ steps: Array(13).fill(step()) })), null)
+  assert.equal(parseSteps('{"steps": ['), null)
+  assert.equal(toSeconds('0:60'), null)
+})
+
+test('유튜브 주소 → 영상 id (선택-1)', () => {
+  const id = 'dQw4w9WgXcQ'
+  assert.equal(youtubeId(`https://www.youtube.com/watch?v=${id}`), id)
+  assert.equal(youtubeId(`https://www.youtube.com/watch?list=x&v=${id}&t=10`), id)
+  assert.equal(youtubeId(`https://youtu.be/${id}?si=abc`), id)
+  assert.equal(youtubeId(`https://youtube.com/shorts/${id}`), id)
+  assert.equal(youtubeId('https://example.com/watch?v=abc'), null)
 })

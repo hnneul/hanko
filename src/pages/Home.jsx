@@ -6,7 +6,7 @@ import { SiteHeader } from '../components/Brand.jsx'
 const STATUS_NAMES = { design: '디자인 중', knitting: '뜨는 중', done: '완성' }
 
 // 내 작업실: 도안 목록, 이름 바꾸기, 삭제, 수준 설정 (PRD #4-6, #4-1)
-export default function Home({ patterns, level, onNew, onOpen, onKnit, onRename, onDelete, onLevel }) {
+export default function Home({ patterns, level, onNew, onVideo, onOpen, onKnit, onRename, onDelete, onLevel }) {
   const sorted = [...patterns].sort((a, b) => b.updatedAt - a.updatedAt)
 
   function rename(p) {
@@ -21,6 +21,7 @@ export default function Home({ patterns, level, onNew, onOpen, onKnit, onRename,
   return (
     <main className="page workspace-page">
       <SiteHeader>
+        <button type="button" className="btn btn-sm" onClick={onVideo}>영상 보며 배우기</button>
         <details className="settings">
           <summary className="btn btn-sm">내 수준 설정</summary>
           <div className="card settings-pop">

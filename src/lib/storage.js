@@ -7,7 +7,7 @@ import { GRID_MIN, GRID_MAX, MAX_COLORS, LEVELS, CHAT_KEEP } from '../config.js'
 const PATTERNS_KEY = 'hanko:patterns'
 const LEVEL_KEY = 'hanko:level'
 const VIEW_KEY = 'hanko:view'
-const PAGES = ['home', 'templates', 'editor', 'knit']
+const PAGES = ['home', 'templates', 'editor', 'knit', 'video']
 const chatKey = (id) => `hanko:chat:${id}`
 const STATUSES = ['design', 'knitting', 'done']
 

@@ -11,6 +11,9 @@ import {
   LEVEL_PROMPTS,
   HELP_PROMPT,
   PALETTE_PROMPT,
+  VIDEO_SUBTITLE_MAX,
+  VIDEO_STEPS_MAX,
+  VIDEO_PROMPT,
 } from '../config.js'
 
 // 글자: 앞뒤 공백 빼고 1~max자가 아니면 null
@@ -49,6 +52,35 @@ const PALETTE_SCHEMA = {
   required: ['palettes'],
 }
 
+const STEPS_SCHEMA = {
+  type: 'OBJECT',
+  properties: {
+    steps: {
+      type: 'ARRAY',
+      items: {
+        type: 'OBJECT',
+        properties: { time: { type: 'STRING' }, title: { type: 'STRING' }, desc: { type: 'STRING' } },
+        required: ['time', 'title', 'desc'],
+      },
+    },
+  },
+  required: ['steps'],
+}
+
+// "1:05", "1:02:03" → 초. 형식이 틀리면 null
+const TIME_RE = /^(?:(\d{1,2}):)?(\d{1,2}):(\d{2})$/
+export function toSeconds(t) {
+  const m = TIME_RE.exec(String(t ?? '').trim())
+  if (!m || Number(m[3]) > 59) return null
+  return Number(m[1] ?? 0) * 3600 + Number(m[2]) * 60 + Number(m[3])
+}
+
+// 유튜브 주소 → 영상 id (watch?v=, youtu.be/, shorts/, embed/). 아니면 null
+export function youtubeId(url) {
+  const m = /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/.exec(String(url ?? ''))
+  return m ? m[1] : null
+}
+
 // 받은 값 검사 → Gemini에 보낼 { system, prompt, schema?, maxTokens }, 틀리면 null
 export function buildRequest(body) {
   if (body?.type === 'palette') {
@@ -61,6 +93,12 @@ export function buildRequest(body) {
       schema: PALETTE_SCHEMA,
       maxTokens: 800,
     }
+  }
+  if (body?.type === 'video') {
+    const subtitles = text(body.subtitles, VIDEO_SUBTITLE_MAX)
+    // 타임스탬프가 없으면 단계를 영상 시간에 이을 수 없음
+    if (!subtitles || !/\d:\d{2}/.test(subtitles)) return null
+    return { system: VIDEO_PROMPT, prompt: `자막:\n${subtitles}`, schema: STEPS_SCHEMA, maxTokens: 1500 }
   }
   if (body?.type === 'help') {
     const question = text(body.question, AI_QUESTION_MAX)
@@ -115,6 +153,26 @@ export function parsePalettes(raw, count) {
     const colors = Array.isArray(p?.colors) && p.colors.length === count ? p.colors : null
     const ok = colors?.every((c) => text(c?.name, 20) && /^#[0-9a-f]{6}$/i.test(c?.hex ?? ''))
     return name && ok ? { name, colors: colors.map((c) => ({ name: c.name.trim(), hex: c.hex.toLowerCase() })) } : null
+  })
+  return out.includes(null) ? null : out
+}
+
+// 영상 해설 답 검사: 단계 0~VIDEO_STEPS_MAX개, 시각은 초로 바꿈. 틀리면 null
+// 빈 배열 = 뜨개 영상 자막이 아님
+export function parseSteps(raw) {
+  let data
+  try {
+    data = JSON.parse(raw)
+  } catch {
+    return null
+  }
+  const list = data?.steps
+  if (!Array.isArray(list) || list.length > VIDEO_STEPS_MAX) return null
+  const out = list.map((s) => {
+    const time = toSeconds(s?.time)
+    const title = text(s?.title, 30)
+    const desc = text(s?.desc, 200)
+    return time !== null && title && desc ? { time, title, desc: desc.replace(/\*\*/g, '') } : null
   })
   return out.includes(null) ? null : out
 }
