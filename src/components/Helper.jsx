@@ -1,13 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AI_QUESTION_MAX, FAQ } from '../config.js'
 import { askAI } from '../lib/ai.js'
+import { loadChat, saveChat } from '../lib/storage.js'
 
-// AI 도우미 채팅 (PRD #4-5). 대화는 저장하지 않음, 새로고침하면 사라짐 (PRD #9)
+// AI 도우미 채팅 (PRD #4-5). 대화는 도안마다 저장해서 나갔다 와도 남음 (PRD #9)
 export default function Helper({ pattern, level, row }) {
-  const [messages, setMessages] = useState([]) // [{ me: true/false, text }]
+  const [messages, setMessages] = useState(() => loadChat(pattern.id)) // [{ me: true/false, text }]
   const [question, setQuestion] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => saveChat(pattern.id, messages), [pattern.id, messages])
 
   async function ask(q) {
     q = q.trim()
@@ -43,7 +46,14 @@ export default function Helper({ pattern, level, row }) {
 
   return (
     <div className="card helper">
-      <h3>AI 도우미</h3>
+      <div className="tool-heading">
+        <h3>AI 도우미</h3>
+        {messages.length > 0 && (
+          <button type="button" className="btn btn-sm btn-quiet" disabled={loading} onClick={() => setMessages([])}>
+            대화 지우기
+          </button>
+        )}
+      </div>
       <div className="faq">
         {FAQ.map((q) => (
           <button key={q} type="button" className="btn btn-sm" disabled={loading} onClick={() => ask(q)}>

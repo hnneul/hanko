@@ -2,12 +2,13 @@
 // 저장값이 망가져 있으면 에러 없이 빈 상태로 시작
 // storage는 테스트에서 가짜를 넘길 수 있게 인자로 받음
 
-import { GRID_MIN, GRID_MAX, MAX_COLORS, LEVELS } from '../config.js'
+import { GRID_MIN, GRID_MAX, MAX_COLORS, LEVELS, CHAT_KEEP } from '../config.js'
 
 const PATTERNS_KEY = 'hanko:patterns'
 const LEVEL_KEY = 'hanko:level'
 const VIEW_KEY = 'hanko:view'
 const PAGES = ['home', 'templates', 'editor', 'knit']
+const chatKey = (id) => `hanko:chat:${id}`
 const STATUSES = ['design', 'knitting', 'done']
 
 const isInt = (n, min, max) => Number.isInteger(n) && n >= min && n <= max
@@ -85,4 +86,22 @@ export function loadView(storage) {
 
 export function saveView(view, storage) {
   write(storage, VIEW_KEY, view, true)
+}
+
+// AI 도우미 대화, 도안마다 최근 CHAT_KEEP개만 (todo 7-5). 망가진 메시지는 뺌
+export function loadChat(id, storage) {
+  const list = read(storage, chatKey(id))
+  return Array.isArray(list) ? list.filter((m) => typeof m?.me === 'boolean' && typeof m?.text === 'string') : []
+}
+
+export function saveChat(id, messages, storage) {
+  write(storage, chatKey(id), messages.slice(-CHAT_KEEP))
+}
+
+export function removeChat(id, storage) {
+  try {
+    (storage ?? localStorage).removeItem(chatKey(id))
+  } catch {
+    // 막힌 브라우저: 지울 것도 없음
+  }
 }

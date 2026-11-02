@@ -1,7 +1,7 @@
 // 실행: npm test
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { loadPatterns, savePatterns, loadLevel, saveLevel, loadView, saveView } from './storage.js'
+import { loadPatterns, savePatterns, loadLevel, saveLevel, loadView, saveView, loadChat, saveChat, removeChat } from './storage.js'
 import { progress } from './pattern.js'
 
 // localStorage 대신 쓰는 가짜 저장소
@@ -9,6 +9,7 @@ function fakeStorage(data = {}) {
   return {
     getItem: (k) => (k in data ? data[k] : null),
     setItem: (k, v) => (data[k] = String(v)),
+    removeItem: (k) => delete data[k],
   }
 }
 
@@ -79,4 +80,15 @@ test('보던 화면 저장 후 다시 읽기, 모르는 값이면 내 작업실 
   assert.deepEqual(loadView(s), { page: 'knit', openId: 'a', knitFrom: 'editor' })
   assert.equal(loadView(fakeStorage({ 'hanko:view': '{"page":"x"}' })).page, 'home')
   assert.equal(loadView(fakeStorage({ 'hanko:view': '{망가짐' })).page, 'home')
+})
+
+test('AI 대화: 도안마다 최근 20개만 저장, 망가진 메시지는 빼고, 도안 삭제 시 지움 (todo 7-5)', () => {
+  const s = fakeStorage({ 'hanko:chat:b': '[{"me":true,"text":"안녕"},{"me":"x"}]' })
+  const many = Array.from({ length: 25 }, (_, i) => ({ me: i % 2 === 0, text: `${i}` }))
+  saveChat('a', many, s)
+  assert.equal(loadChat('a', s).length, 20)
+  assert.equal(loadChat('a', s)[0].text, '5')
+  assert.deepEqual(loadChat('b', s), [{ me: true, text: '안녕' }])
+  removeChat('a', s)
+  assert.deepEqual(loadChat('a', s), [])
 })

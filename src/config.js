@@ -24,6 +24,7 @@ export const AI_MODEL = 'gemini-3.5-flash-lite'
 export const AI_QUESTION_MAX = 200
 export const AI_MOOD_MAX = 40
 export const AI_ANSWER_MAX = 600 // 글자 수, 넘으면 자름
+export const CHAT_KEEP = 20 // 도안마다 남기는 최근 대화 수 (todo 7-5)
 
 export const AI_ERROR = '지금은 AI가 바빠요. 잠시 후 다시 시도해 주세요.'
 

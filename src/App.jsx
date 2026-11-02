@@ -5,7 +5,7 @@ import Templates from './pages/Templates.jsx'
 import Editor from './pages/Editor.jsx'
 import Knit from './pages/Knit.jsx'
 import { createPattern } from './lib/pattern.js'
-import { loadPatterns, savePatterns, loadLevel, saveLevel, loadView, saveView } from './lib/storage.js'
+import { loadPatterns, savePatterns, loadLevel, saveLevel, loadView, saveView, removeChat } from './lib/storage.js'
 
 // 화면: 'home' → 'templates' → 'editor' → 'knit'
 // 수준을 아직 안 골랐으면 어느 화면이든 수준 선택부터 (PRD #4-1)
@@ -94,7 +94,10 @@ function App() {
         setPage('knit')
       }}
       onRename={(id, name) => updatePattern({ ...patterns.find((p) => p.id === id), name, updatedAt: Date.now() })}
-      onDelete={(id) => setPatterns((list) => list.filter((p) => p.id !== id))}
+      onDelete={(id) => {
+        setPatterns((list) => list.filter((p) => p.id !== id))
+        removeChat(id)
+      }}
       onLevel={chooseLevel}
     />
   )
