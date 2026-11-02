@@ -14,6 +14,7 @@ export default function Knit({ pattern, level, onChange, onBack, onHome, onCompl
   const current = rows.find((r) => !doneRows.includes(r.row))?.row
   const activeRow = rows.find((r) => r.row === current)
   const currentRef = useRef(null)
+  const celebrate = useRef(null)
   const [awake, setAwake] = useState(false)
 
   // 현재 단이 목록 위쪽에 보이게. 화면 전체는 안 움직이도록 목록 안에서만 스크롤
@@ -56,12 +57,24 @@ export default function Knit({ pattern, level, onChange, onBack, onHome, onCompl
         <span className="knit-head-count">{doneRows.length} / {rows.length}단</span>
       </header>
 
-      {pattern.status === 'done' && (
-        <div className="card celebrate" role="status">
-          <h2>완성을 축하해요!</h2>
-          <p>{rows.length}단을 모두 떴어요. 내 작업실에서 '완성'으로 보여요.</p>
+      {/* 마지막 단을 완료하면 축하 팝업 */}
+      <dialog ref={celebrate} className="card video-guide celebrate-pop" aria-labelledby="celebrate-title">
+        <div className="celebrate">
+          <img
+            className="celebrate-mascot pixel-art"
+            src="/characters/koko-celebrate-pixel.webp"
+            alt="코바늘을 들고 완성을 축하하는 코코"
+          />
+          <div>
+            <h2 id="celebrate-title">완성을 축하해요!</h2>
+            <p>{rows.length}단을 모두 떴어요. 내 작업실에서 '완성'으로 보여요.</p>
+          </div>
         </div>
-      )}
+        <form method="dialog" className="video-guide-actions">
+          <button type="button" className="btn btn-primary" onClick={onComplete}>내 작업실로 가기</button>
+          <button type="submit" className="btn btn-quiet">닫기</button>
+        </form>
+      </dialog>
 
       <div className="card knit-progress">
         <div className="progress-copy">
@@ -168,6 +181,7 @@ export default function Knit({ pattern, level, onChange, onBack, onHome, onCompl
           onClick={() => {
             if (current) {
               onChange(withDoneRows(pattern, [...doneRows, current]))
+              if (doneRows.length + 1 === rows.length) celebrate.current.showModal()
               return
             }
             onComplete()

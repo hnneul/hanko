@@ -63,14 +63,18 @@ export default function Home({ patterns, videos, guides, level, onNew, onVideo, 
 
       {sorted.length === 0 ? (
         <section className="empty-workspace">
-          <div className="empty-swatch" aria-hidden="true">
-            <span /><span /><span /><span /><span /><span /><span /><span /><span />
+          <div className="empty-mascot">
+            <img
+              className="pixel-art"
+              src="/characters/koko-empty-workspace-v3-pixel.webp"
+              alt="코바늘을 든 픽셀 아트 한코한코 캐릭터 코코"
+            />
           </div>
           <div>
             <p className="eyebrow">YOUR FIRST PATTERN</p>
             <h2>첫 도안을 만들어 보세요</h2>
             <p>템플릿을 고르고 칸에 색을 칠하면 나만의 도안이 돼요.</p>
-            <button type="button" className="btn btn-primary" onClick={onNew}>첫 도안 시작하기</button>
+            <button type="button" className="btn btn-primary" onClick={onNew}>시작하기</button>
           </div>
         </section>
       ) : (

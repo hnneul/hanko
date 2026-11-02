@@ -606,35 +606,23 @@ progress::-webkit-progress-value {
   color: var(--color-text-muted);
 }
 
-.empty-swatch {
+.empty-mascot {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  place-items: center;
   width: 100%;
   aspect-ratio: 1;
-  max-width: 330px;
-  gap: 5px;
-  padding: 22px;
-  border: 1px solid var(--color-border);
-  border-radius: 30px;
-  background: #ffffff;
-  box-shadow: var(--shadow);
-  transform: rotate(-2deg);
+  max-width: 370px;
 }
 
-.empty-swatch span {
-  border-radius: 10px;
-  background: var(--color-surface-muted);
+.empty-mascot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 24px rgba(64, 62, 58, 0.1));
 }
 
-.empty-swatch span:nth-child(2),
-.empty-swatch span:nth-child(4),
-.empty-swatch span:nth-child(6),
-.empty-swatch span:nth-child(8) {
-  background: var(--color-primary-soft);
-}
-
-.empty-swatch span:nth-child(5) {
-  background: var(--color-accent);
+.pixel-art {
+  image-rendering: pixelated;
 }
 
 .section-heading {
@@ -1919,10 +1907,48 @@ progress::-webkit-progress-value {
 }
 
 .celebrate {
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
   margin-bottom: 16px;
+  padding-block: 18px;
   border-color: rgba(115, 141, 112, 0.3);
   background: var(--color-primary-soft);
-  text-align: center;
+  text-align: left;
+}
+
+.celebrate-mascot {
+  width: 118px;
+  height: 118px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 14px rgba(64, 62, 58, 0.1));
+}
+
+.celebrate h2 {
+  margin-bottom: 6px;
+}
+
+.celebrate p {
+  margin-bottom: 0;
+}
+
+/* 축하 팝업: 캐릭터를 크게, 글은 작게 */
+.celebrate-pop .celebrate {
+  grid-template-columns: 180px minmax(0, 1fr);
+}
+
+.celebrate-pop .celebrate-mascot {
+  width: 180px;
+  height: 180px;
+}
+
+.celebrate-pop h2 {
+  font-size: 1.375rem;
+}
+
+.celebrate-pop p {
+  font-size: 0.9375rem;
 }
 
 .knit-actions {
@@ -2404,8 +2430,8 @@ progress::-webkit-progress-value {
     margin-top: 48px;
   }
 
-  .empty-swatch {
-    max-width: 240px;
+  .empty-mascot {
+    max-width: 270px;
   }
 
   .empty-workspace br {
@@ -2534,6 +2560,32 @@ progress::-webkit-progress-value {
 
   .knit-progress {
     padding: 16px;
+  }
+
+  .celebrate {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 18px;
+    text-align: center;
+  }
+
+  .celebrate-mascot {
+    width: 104px;
+    height: 104px;
+    margin: 0 auto;
+  }
+
+  .celebrate-pop .celebrate {
+    grid-template-columns: 1fr;
+  }
+
+  .celebrate-pop .celebrate-mascot {
+    width: 150px;
+    height: 150px;
+  }
+
+  .celebrate-pop .video-guide-actions {
+    grid-template-columns: 1fr;
   }
 
   .current-step {
