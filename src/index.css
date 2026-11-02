@@ -704,6 +704,11 @@ progress::-webkit-progress-value {
   border-radius: 0;
 }
 
+/* 미리보기 그림이 없는 카드(풀어 본 도안)는 글이 카드 폭을 다 씀 */
+.pattern-open.no-preview {
+  grid-template-columns: 1fr;
+}
+
 .pattern-copy {
   display: grid;
   gap: 7px;

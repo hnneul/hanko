@@ -153,6 +153,7 @@ function App() {
         setOpenId(id)
         setPage('guide')
       }}
+      onRenameGuide={(id, title) => setGuides((list) => list.map((g) => (g.id === id ? { ...g, title } : g)))}
       onDeleteGuide={(id) => setGuides((list) => list.filter((g) => g.id !== id))}
       onOpen={(id) => {
         setOpenId(id)

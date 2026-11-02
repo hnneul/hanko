@@ -7,12 +7,17 @@ import { SiteHeader } from '../components/Brand.jsx'
 const STATUS_NAMES = { design: '디자인 중', knitting: '뜨는 중', done: '완성' }
 
 // 내 작업실: 도안 목록, 이름 바꾸기, 삭제, 설명 방식 설정 (PRD #4-6, #4-1)
-export default function Home({ patterns, videos, guides, level, onNew, onVideo, onDeleteVideo, onGuide, onDeleteGuide, onOpen, onKnit, onRename, onDelete, onLevel }) {
+export default function Home({ patterns, videos, guides, level, onNew, onVideo, onDeleteVideo, onGuide, onRenameGuide, onDeleteGuide, onOpen, onKnit, onRename, onDelete, onLevel }) {
   const sorted = [...patterns].sort((a, b) => b.updatedAt - a.updatedAt)
 
   function rename(p) {
     const name = prompt('새 도안 이름', p.name)?.trim()
     if (name) onRename(p.id, name)
+  }
+
+  function renameGuide(g) {
+    const title = prompt('새 도안 이름', g.title)?.trim()
+    if (title) onRenameGuide(g.id, title)
   }
 
   function remove(p) {
@@ -127,7 +132,7 @@ export default function Home({ patterns, videos, guides, level, onNew, onVideo, 
               const total = guideTotal(g)
               return (
                 <li key={g.id} className="pattern-card">
-                  <button type="button" className="pattern-open" onClick={() => onGuide(g.id)}>
+                  <button type="button" className="pattern-open no-preview" onClick={() => onGuide(g.id)}>
                     <span className="pattern-copy">
                       <strong>{g.title}</strong>
                       <span className="pattern-progress-copy">{g.done.length} / {total} 완료</span>
@@ -135,6 +140,7 @@ export default function Home({ patterns, videos, guides, level, onNew, onVideo, 
                     </span>
                   </button>
                   <div className="pattern-actions">
+                    <button type="button" className="btn btn-sm" onClick={() => renameGuide(g)}>이름 바꾸기</button>
                     <button
                       type="button"
                       className="btn btn-sm btn-quiet"
