@@ -31,8 +31,18 @@ export default function Video({ saved, onSave, onBack, onHome }) {
 
   async function summarize(e) {
     e.preventDefault()
-    if (!/\d:\d{2}/.test(subtitles)) {
-      setAi({ loading: false, error: '타임스탬프(0:05 같은 시각)가 있는 자막을 붙여 넣어 주세요.', steps: null })
+    // 빠진 게 있으면 누른 뒤에 무엇이 빠졌는지 알려 줌
+    const missing = !url.trim() && !subtitles.trim()
+      ? '영상 주소와 자막을 넣어 주세요.'
+      : !url.trim()
+      ? '영상 주소를 넣어 주세요.'
+      : !id
+        ? '유튜브 영상 주소가 아니에요.'
+        : !subtitles.trim()
+          ? '자막을 붙여 넣어 주세요.'
+          : !/\d:\d{2}/.test(subtitles) && '타임스탬프(0:05 같은 시각)가 있는 자막을 붙여 넣어 주세요.'
+    if (missing) {
+      setAi({ ...ai, error: missing })
       return
     }
     setAi({ loading: true, error: '', steps: null })
@@ -98,7 +108,6 @@ export default function Video({ saved, onSave, onBack, onHome }) {
               onChange={(e) => setUrl(e.target.value)}
             />
           </label>
-          {url && !id && <p className="error">유튜브 영상 주소가 아니에요.</p>}
           <label>
             자막
             <textarea
@@ -110,7 +119,7 @@ export default function Video({ saved, onSave, onBack, onHome }) {
             />
           </label>
           <p className="muted">유튜브에서 영상 설명의 "스크립트 표시"를 열고, 시각이 붙은 자막을 그대로 복사해 붙여 넣어요.</p>
-          <button type="submit" className="btn btn-primary" disabled={ai.loading || !id || !subtitles.trim()}>
+          <button type="submit" className="btn btn-primary" disabled={ai.loading}>
             {ai.loading ? '정리 중…' : 'AI로 단계 정리'}
           </button>
           {ai.error && <p className="error" role="alert">{ai.error}</p>}
