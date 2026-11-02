@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">한코한코 실타래</title>
+  <defs>
+    <clipPath id="yarn-ball">
+      <circle cx="29" cy="28" r="20" />
+    </clipPath>
+  </defs>
+
+  <circle cx="29" cy="28" r="20" fill="#738D70" />
+  <g clip-path="url(#yarn-ball)" fill="none" stroke-linecap="round">
+    <path d="M5 23C16 11 36 8 52 18" stroke="#4D624B" stroke-width="4" />
+    <path d="M7 40C18 29 34 21 51 21" stroke="#4D624B" stroke-width="4" />
+    <path d="M12 51C24 40 39 34 52 37" stroke="#4D624B" stroke-width="4" />
+    <path d="M15 8C20 21 34 28 49 32" stroke="#E8B9B0" stroke-width="6" />
+  </g>
+
+  <path
+    d="M42 41C48 44 48 49 53 52C57 55 60 53 62 50"
+    fill="none"
+    stroke="#4D624B"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="4.5"
+  />
+</svg>
