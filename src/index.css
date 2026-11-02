@@ -2117,6 +2117,17 @@ progress::-webkit-progress-value {
   top: 16px;
 }
 
+.guide-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.guide-title h2 {
+  margin: 0;
+}
+
 .guide-result progress {
   width: 100%;
 }

@@ -89,6 +89,11 @@ export default function Guide({ saved, level, onSave, onBack, onHome }) {
     }
   }
 
+  function rename() {
+    const title = prompt('새 도안 이름', guide.title)?.trim()
+    if (title) update({ ...guide, title, updatedAt: Date.now() })
+  }
+
   function toggle(key) {
     const done = guide.done.includes(key) ? guide.done.filter((k) => k !== key) : [...guide.done, key]
     update({ ...guide, done, updatedAt: Date.now() })
@@ -144,7 +149,10 @@ export default function Guide({ saved, level, onSave, onBack, onHome }) {
         {guide && (
           <section className="guide-result">
             <div className="video-saved">
-              <h2>{guide.title}</h2>
+              <div className="guide-title">
+                <h2>{guide.title}</h2>
+                <button type="button" className="btn btn-sm" onClick={rename}>이름 바꾸기</button>
+              </div>
               <p className="muted">
                 {guide.done.length} / {total} 완료 · 내 작업실 "풀어 본 도안"에 저장돼 있어요.
               </p>
