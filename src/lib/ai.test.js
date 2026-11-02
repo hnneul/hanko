@@ -1,7 +1,7 @@
 // 실행: npm test
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { buildRequest, parsePalettes, parseVideo, parseGuide, writtenCount, toSeconds, youtubeId, cleanAnswer } from './ai.js'
+import { buildRequest, parsePalettes, parseVideo, parseGuide, writtenCount, rowChecks, guideTotal, toSeconds, youtubeId, cleanAnswer } from './ai.js'
 
 const help = {
   type: 'help',
@@ -137,4 +137,14 @@ test('도안 단 묻기 요청: 원문·풀이·질문을 담고, 틀린 값은 
 test('도우미 1단 질문에는 시작 사슬에 바로 뜨는 법을 붙임', () => {
   assert.match(buildRequest({ ...help, row: { ...help.row, row: 1 } }).prompt, /바늘에서 두 번째 사슬부터/)
   assert.doesNotMatch(buildRequest({ ...help, row: { ...help.row, row: 2 } }).prompt, /1단 시작법/)
+})
+
+test('범위 단은 단마다 체크: 5-8단 → 4칸', () => {
+  assert.deepEqual(rowChecks('5-8단'), ['5단', '6단', '7단', '8단'])
+  assert.deepEqual(rowChecks('10~11단'), ['10단', '11단'])
+  assert.equal(rowChecks('3단'), null)
+  assert.equal(rowChecks('8-5단'), null) // 거꾸로
+  assert.equal(rowChecks('마무리'), null)
+  const row = (label) => ({ label, original: label, count: 0, steps: ['a'] })
+  assert.equal(guideTotal({ parts: [{ name: 'a', rows: [row('1단'), row('5-8단')] }, { name: 'b', rows: [row('마무리')] }] }), 6)
 })

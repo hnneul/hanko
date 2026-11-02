@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { AI_QUESTION_MAX, GUIDE_TEXT_MAX } from '../config.js'
-import { askAI, writtenCount } from '../lib/ai.js'
+import { askAI, writtenCount, rowChecks, guideTotal } from '../lib/ai.js'
 import { SiteHeader } from '../components/Brand.jsx'
 
 // 코 수 확인: 도안에 적힌 [n]·(n코)와 AI가 센 코 수 비교. 적힌 숫자가 없으면 안 보여 줌
@@ -62,7 +62,7 @@ export default function Guide({ saved, level, onSave, onBack, onHome }) {
   const [text, setText] = useState('')
   const [ai, setAi] = useState({ loading: false, error: '' })
   const [guide, setGuide] = useState(saved ?? null)
-  const total = guide?.parts.reduce((n, p) => n + p.rows.length, 0) ?? 0
+  const total = guide ? guideTotal(guide) : 0
 
   function update(next) {
     setGuide(next)
@@ -143,13 +143,30 @@ export default function Guide({ saved, level, onSave, onBack, onHome }) {
                 <ol className="video-steps">
                   {part.rows.map((row, ri) => {
                     const key = `${pi}-${ri}`
-                    const done = guide.done.includes(key)
+                    // "5-8단"처럼 여러 단을 한 줄로 쓴 건 단마다 체크
+                    const checks = rowChecks(row.label)
+                    const keys = checks ? checks.map((_, k) => `${key}-${k}`) : [key]
+                    const done = keys.every((k) => guide.done.includes(k))
                     return (
                       <li key={key} className={done ? 'card guide-row done' : 'card guide-row'}>
-                        <label className="guide-check">
-                          <input type="checkbox" checked={done} onChange={() => toggle(key)} />
-                          <strong>{row.label}</strong>
-                        </label>
+                        {checks ? (
+                          <div>
+                            <strong>{row.label}</strong>
+                            <div className="guide-checks">
+                              {checks.map((c, k) => (
+                                <label key={c} className="guide-check">
+                                  <input type="checkbox" checked={guide.done.includes(keys[k])} onChange={() => toggle(keys[k])} />
+                                  {c}
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+                        ) : (
+                          <label className="guide-check">
+                            <input type="checkbox" checked={done} onChange={() => toggle(key)} />
+                            <strong>{row.label}</strong>
+                          </label>
+                        )}
                         <p className="guide-original">{row.original}</p>
                         <ol className="guide-steps">
                           {row.steps.map((s, si) => <li key={si}>{s}</li>)}

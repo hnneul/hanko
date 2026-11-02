@@ -374,6 +374,8 @@ input:focus-visible {
   width: 100%;
   height: auto;
   border-radius: 12px;
+  /* 흰 칸이 흰 바탕에 묻히지 않게 */
+  box-shadow: 0 0 0 1px var(--color-border);
 }
 
 progress {
@@ -2140,6 +2142,12 @@ progress::-webkit-progress-value {
 
 .guide-count.warn {
   color: var(--color-warning);
+}
+
+.guide-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
 }
 
 .guide-ask summary {

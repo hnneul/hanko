@@ -91,7 +91,7 @@ export default function Knit({ pattern, level, onChange, onBack, onHome, onCompl
                   </span>
                 ))}
               </div>
-              <p className="current-tip">색이 바뀌는 지점에서 사용하지 않는 실은 코 안쪽으로 감싸며 떠주세요.</p>
+              {activeRow.runs.length > 1 && <p className="current-tip">색이 바뀌는 지점에서 사용하지 않는 실은 코 안쪽으로 감싸며 떠주세요.</p>}
             </div>
           ) : (
             <div className="card current-step complete-step">

@@ -251,6 +251,17 @@ export function parseVideo(raw) {
 const COUNT_RE = /\[(\d+)\]|\((\d+)\s*코\)/g
 
 // 붙여 넣은 도안 → 줄 목록 (줄 번호 = 순번 + 1). 서버가 원문을 꺼낼 때도 같은 함수를 씀
+// "5-8단"·"5~8단" → ['5단', '6단', '7단', '8단'] (단마다 따로 체크). 범위가 아니면 null
+export function rowChecks(label) {
+  const m = /(\d+)\s*[-~]\s*(\d+)\s*단/.exec(String(label ?? ''))
+  const from = Number(m?.[1])
+  const n = Number(m?.[2]) - from + 1
+  return n >= 2 && n <= 30 ? Array.from({ length: n }, (_, k) => `${from + k}단`) : null
+}
+
+// 풀어 본 도안의 체크 칸 수: 범위 단은 단마다 하나
+export const guideTotal = (guide) => guide.parts.reduce((n, p) => n + p.rows.reduce((m, r) => m + (rowChecks(r.label)?.length ?? 1), 0), 0)
+
 export function guideLines(pattern) {
   return String(pattern ?? '').trim().split('\n')
 }

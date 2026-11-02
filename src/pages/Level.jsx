@@ -27,7 +27,7 @@ export default function Level({ onPick }) {
         </div>
       </section>
 
-      <p className="level-note">선택한 수준에 맞춰 AI 도우미의 설명이 달라져요.</p>
+      <p className="level-note">고른 설명 방식에 맞춰 AI 도우미의 설명이 달라져요.</p>
     </main>
   )
 }

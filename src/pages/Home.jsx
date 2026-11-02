@@ -1,11 +1,12 @@
 import { LEVELS } from '../config.js'
 import { progress } from '../lib/pattern.js'
+import { guideTotal } from '../lib/ai.js'
 import Preview from '../components/Preview.jsx'
 import { SiteHeader } from '../components/Brand.jsx'
 
 const STATUS_NAMES = { design: '디자인 중', knitting: '뜨는 중', done: '완성' }
 
-// 내 작업실: 도안 목록, 이름 바꾸기, 삭제, 수준 설정 (PRD #4-6, #4-1)
+// 내 작업실: 도안 목록, 이름 바꾸기, 삭제, 설명 방식 설정 (PRD #4-6, #4-1)
 export default function Home({ patterns, videos, guides, level, onNew, onVideo, onDeleteVideo, onGuide, onDeleteGuide, onOpen, onKnit, onRename, onDelete, onLevel }) {
   const sorted = [...patterns].sort((a, b) => b.updatedAt - a.updatedAt)
 
@@ -24,9 +25,9 @@ export default function Home({ patterns, videos, guides, level, onNew, onVideo, 
         <button type="button" className="btn btn-sm" onClick={() => onGuide()}>도안 풀어 보기</button>
         <button type="button" className="btn btn-sm" onClick={() => onVideo()}>영상 보며 배우기</button>
         <details className="settings">
-          <summary className="btn btn-sm">내 수준 설정</summary>
+          <summary className="btn btn-sm">설명 방식</summary>
           <div className="card settings-pop">
-            <p className="settings-title">설명 수준</p>
+            <p className="settings-title">AI 설명 방식</p>
             {LEVELS.map((l) => (
               <button
                 key={l.id}
@@ -119,7 +120,7 @@ export default function Home({ patterns, videos, guides, level, onNew, onVideo, 
           </div>
           <ul className="pattern-list">
             {guides.map((g) => {
-              const total = g.parts.reduce((n, p) => n + p.rows.length, 0)
+              const total = guideTotal(g)
               return (
                 <li key={g.id} className="pattern-card">
                   <button type="button" className="pattern-open" onClick={() => onGuide(g.id)}>
